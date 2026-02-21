@@ -1,152 +1,138 @@
-@extends('layouts.app')
-
-@section('content')
-
-<!-- Hero Section (Slider) -->
-<section class="relative bg-brand-gray h-[500px] flex items-center overflow-hidden">
-    <!-- Background Image Placeholder (Replace with actual dynamic slider later) -->
-    <div class="absolute inset-0 bg-gray-200">
-        <!-- Mockup Image Overlay -->
-        <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" 
-             alt="Modern Living" 
-             class="w-full h-full object-cover opacity-90">
-    </div>
-    
-    <div class="container mx-auto px-4 relative z-10">
-        <div class="max-w-lg bg-white/90 backdrop-blur-sm p-8 rounded-sm shadow-xl border-l-4 border-brand-red">
-            <h2 class="text-sm font-bold text-brand-red tracking-widest uppercase mb-2">New Collection 2026</h2>
-            <h1 class="text-4xl md:text-5xl font-bold text-brand-dark mb-4 leading-tight">
-                Premium Doors & <br> Modern Furniture
-            </h1>
-            <p class="text-gray-600 mb-6">Experience the perfect blend of aesthetics and durability. Transform your home with Advance Doors.</p>
-            <a href="#" class="inline-block bg-brand-red text-white px-8 py-3 font-medium text-sm uppercase tracking-wide hover:bg-red-800 transition duration-300 shadow-lg">
-                Shop Now
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- Categories Section -->
-<section class="py-16 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-brand-dark">Explore By Category</h2>
-            <div class="w-16 h-1 bg-brand-red mx-auto mt-3"></div>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            <!-- Category Item -->
-            @foreach(['Doors', 'Sofas', 'Beds', 'Dining', 'Office', 'Misc'] as $category)
-            <a href="#" class="group block text-center">
-                <div class="w-32 h-32 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4 group-hover:bg-brand-red transition duration-300 overflow-hidden relative">
-                   <!-- Icon placeholder -->
-                   <i class="fas fa-couch text-3xl text-gray-400 group-hover:text-white transition duration-300"></i>
-                </div>
-                <h3 class="font-medium text-gray-800 group-hover:text-brand-red transition">{{ $category }}</h3>
-            </a>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-<!-- Featured Products (Hatil Style Grid) -->
-<section class="py-16 bg-gray-50">
-    <div class="container mx-auto px-4">
-        <div class="flex justify-between items-end mb-10">
-            <div>
-                <h2 class="text-3xl font-bold text-brand-dark">Best Sellers</h2>
-                <div class="w-16 h-1 bg-brand-red mt-3"></div>
-            </div>
-            <a href="#" class="text-brand-red font-medium hover:text-brand-dark transition text-sm">View All <i class="fas fa-arrow-right ml-1"></i></a>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Product Card 1 -->
-            <div class="bg-white group hover:shadow-xl transition duration-300 border border-gray-100">
-                <div class="relative h-64 overflow-hidden bg-gray-200">
-                    <span class="absolute top-4 left-4 bg-brand-red text-white text-xs font-bold px-2 py-1 z-10">NEW</span>
-                    <img src="https://images.unsplash.com/photo-1517705600643-98fe9ccf3624?auto=format&fit=crop&w=500&q=80" 
-                         alt="Door" 
-                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    <!-- Hover Action -->
-                    <div class="absolute bottom-0 left-0 right-0 bg-white/95 py-3 translate-y-full group-hover:translate-y-0 transition duration-300 flex justify-center space-x-4 shadow-top">
-                        <button class="text-gray-800 hover:text-brand-red" title="Add to Cart"><i class="fas fa-shopping-cart"></i></button>
-                        <button class="text-gray-800 hover:text-brand-red" title="Quick View"><i class="fas fa-eye"></i></button>
-                    </div>
-                </div>
-                <div class="p-4 text-center">
-                    <p class="text-xs text-gray-500 mb-1">Entrance Doors</p>
-                    <h3 class="font-bold text-gray-800 text-lg mb-2 group-hover:text-brand-red transition">Mahogany Solid Door</h3>
-                    <div class="flex justify-center items-center space-x-2">
-                        <span class="text-brand-red font-bold">$450.00</span>
-                        <span class="text-gray-400 text-sm line-through">$550.00</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product Card 2 -->
-            <div class="bg-white group hover:shadow-xl transition duration-300 border border-gray-100">
-                <div class="relative h-64 overflow-hidden bg-gray-200">
-                    <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=500&q=80" 
-                         alt="Sofa" 
-                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    <div class="absolute bottom-0 left-0 right-0 bg-white/95 py-3 translate-y-full group-hover:translate-y-0 transition duration-300 flex justify-center space-x-4 shadow-top">
-                        <button class="text-gray-800 hover:text-brand-red"><i class="fas fa-shopping-cart"></i></button>
-                        <button class="text-gray-800 hover:text-brand-red"><i class="fas fa-eye"></i></button>
-                    </div>
-                </div>
-                <div class="p-4 text-center">
-                    <p class="text-xs text-gray-500 mb-1">Living Room</p>
-                    <h3 class="font-bold text-gray-800 text-lg mb-2 group-hover:text-brand-red transition">Velvet Green Sofa</h3>
-                    <div class="flex justify-center items-center space-x-2">
-                        <span class="text-brand-red font-bold">$1,200.00</span>
-                    </div>
-                </div>
-            </div>
+<header class="w-full bg-white sticky top-0 z-50 border-b border-gray-100">
+    <div class="container mx-auto px-4 lg:px-8">
+        <div class="flex items-center justify-between h-20">
             
-            <!-- Card 3 & 4 would go here with similar structure -->
-             <div class="bg-white group hover:shadow-xl transition duration-300 border border-gray-100">
-                <div class="relative h-64 overflow-hidden bg-gray-200">
-                    <img src="https://images.unsplash.com/photo-1505693416388-b0346ef12126?auto=format&fit=crop&w=500&q=80" 
-                         alt="Sofa" 
-                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    <div class="absolute bottom-0 left-0 right-0 bg-white/95 py-3 translate-y-full group-hover:translate-y-0 transition duration-300 flex justify-center space-x-4 shadow-top">
-                        <button class="text-gray-800 hover:text-brand-red"><i class="fas fa-shopping-cart"></i></button>
-                        <button class="text-gray-800 hover:text-brand-red"><i class="fas fa-eye"></i></button>
-                    </div>
+            <!-- Logo (Hatil Style) -->
+            <a href="{{ route('home') }}" class="flex-shrink-0 flex items-center">
+                <div class="bg-brand-red text-white font-bold text-2xl tracking-tight px-3 py-1 mr-1">
+                    ADVANCE
                 </div>
-                <div class="p-4 text-center">
-                    <p class="text-xs text-gray-500 mb-1">Bedroom</p>
-                    <h3 class="font-bold text-gray-800 text-lg mb-2 group-hover:text-brand-red transition">King Size Bed</h3>
-                    <div class="flex justify-center items-center space-x-2">
-                        <span class="text-brand-red font-bold">$800.00</span>
-                    </div>
+                <div class="text-brand-dark font-bold text-2xl tracking-tighter">
+                    DOORS
                 </div>
-            </div>
-             <div class="bg-white group hover:shadow-xl transition duration-300 border border-gray-100">
-                <div class="relative h-64 overflow-hidden bg-gray-200">
-                    <img src="https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?auto=format&fit=crop&w=500&q=80" 
-                         alt="Sofa" 
-                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    <div class="absolute bottom-0 left-0 right-0 bg-white/95 py-3 translate-y-full group-hover:translate-y-0 transition duration-300 flex justify-center space-x-4 shadow-top">
-                        <button class="text-gray-800 hover:text-brand-red"><i class="fas fa-shopping-cart"></i></button>
-                        <button class="text-gray-800 hover:text-brand-red"><i class="fas fa-eye"></i></button>
-                    </div>
-                </div>
-                <div class="p-4 text-center">
-                    <p class="text-xs text-gray-500 mb-1">Dining</p>
-                    <h3 class="font-bold text-gray-800 text-lg mb-2 group-hover:text-brand-red transition">Modern Dining Table</h3>
-                    <div class="flex justify-center items-center space-x-2">
-                        <span class="text-brand-red font-bold">$650.00</span>
-                    </div>
-                </div>
-            </div>
+            </a>
 
+            <!-- Main Navigation -->
+            <nav class="hidden xl:block flex-1 px-8">
+                <ul class="flex justify-center space-x-6 text-[15px] font-medium text-gray-800">
+                    <li class="hover:text-brand-red transition cursor-pointer"><a href="{{ route('home') }}">Home</a></li>
+                    <li class="hover:text-brand-red transition cursor-pointer"><a href="{{ route('shop') }}">Living Room</a></li>
+                    
+                    <!-- Mega Menu Trigger -->
+                    <li class="group static">
+                        <a href="{{ route('shop') }}" class="block py-8 hover:text-brand-red transition">Bedroom</a>
+                        
+                        <!-- Mega Menu Dropdown -->
+                        <div class="absolute left-0 top-full w-full bg-white shadow-xl border-t border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="container mx-auto px-8 py-10 flex gap-16">
+                                <div class="w-1/4">
+                                    <h4 class="font-bold text-brand-dark mb-4 hover:text-brand-red cursor-pointer">Bed Room Set</h4>
+                                    <h4 class="font-bold text-brand-dark mb-3 mt-6 hover:text-brand-red cursor-pointer flex items-center gap-1">Bed <i class="fas fa-arrow-right text-xs"></i></h4>
+                                    <ul class="space-y-2 text-sm text-gray-600">
+                                        <li><a href="#" class="hover:text-brand-red transition">King Size Bed</a></li>
+                                        <li><a href="#" class="hover:text-brand-red transition">Queen Size Bed</a></li>
+                                        <li><a href="#" class="hover:text-brand-red transition">Semi Double Bed</a></li>
+                                        <li><a href="#" class="hover:text-brand-red transition">Bed with Storage</a></li>
+                                        <li><a href="#" class="hover:text-brand-red transition">Low Height Bed</a></li>
+                                        <li><a href="#" class="hover:text-brand-red transition">Sofa Cum Bed</a></li>
+                                    </ul>
+                                </div>
+                                <div class="w-1/4">
+                                    <h4 class="font-bold text-brand-dark mb-3 hover:text-brand-red cursor-pointer flex items-center gap-1">Wardrobe <i class="fas fa-arrow-right text-xs"></i></h4>
+                                    <ul class="space-y-2 text-sm text-gray-600">
+                                        <li><a href="#" class="hover:text-brand-red transition">Wardrobe With Mirror</a></li>
+                                        <li><a href="#" class="hover:text-brand-red transition">Wardrobe With Slide Door</a></li>
+                                        <li><a href="#" class="hover:text-brand-red transition">Modular Wardrobe</a></li>
+                                        <li><a href="#" class="hover:text-brand-red transition">Non-Lacquer Wardrobe</a></li>
+                                    </ul>
+                                </div>
+                                <div class="w-1/4">
+                                    <h4 class="font-bold text-brand-dark mb-3 hover:text-brand-red cursor-pointer flex items-center gap-1">Chest of Drawers <i class="fas fa-arrow-right text-xs"></i></h4>
+                                    <ul class="space-y-2 text-sm text-gray-600 mb-6">
+                                        <li><a href="#" class="hover:text-brand-red transition">Non-Lacquer Chest of Drawers</a></li>
+                                    </ul>
+                                    <h4 class="font-bold text-brand-dark mb-3 hover:text-brand-red cursor-pointer flex items-center gap-1">Dressing Table <i class="fas fa-arrow-right text-xs"></i></h4>
+                                    <ul class="space-y-2 text-sm text-gray-600">
+                                        <li><a href="#" class="hover:text-brand-red transition">Non-Lacquer Dressing Table</a></li>
+                                        <li><a href="#" class="hover:text-brand-red transition">Dressing Table With Storage</a></li>
+                                    </ul>
+                                </div>
+                                <div class="w-1/4">
+                                    <img src="https://images.unsplash.com/photo-1505693416388-b0346ef12126?w=400&q=80" alt="Bedroom Promotion" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    
+                    <li class="hover:text-brand-red transition cursor-pointer py-8"><a href="#">Dining</a></li>
+                    <li class="hover:text-brand-red transition cursor-pointer py-8"><a href="#">Kitchen</a></li>
+                    <li class="hover:text-brand-red transition cursor-pointer py-8"><a href="#">Kids' Room</a></li>
+                    <li class="hover:text-brand-red transition cursor-pointer py-8"><a href="#">SmartFit</a></li>
+                    <li class="hover:text-brand-red transition cursor-pointer py-8"><a href="#">Door</a></li>
+                    <li class="hover:text-brand-red transition cursor-pointer py-8"><a href="#">Interior</a></li>
+                    <li class="hover:text-brand-red transition cursor-pointer py-8 flex items-center gap-1">More <i class="fas fa-caret-down text-xs"></i></li>
+                </ul>
+            </nav>
+
+            <!-- Right Icons -->
+            <div class="flex items-center space-x-6">
+                <button class="text-gray-800 hover:text-brand-red transition">
+                    <i class="fas fa-search text-lg"></i>
+                </button>
+                <button onclick="toggleCart()" class="text-gray-800 hover:text-brand-red transition relative">
+                    <i class="fas fa-shopping-cart text-lg"></i>
+                    <span class="absolute -top-2 -right-2 bg-brand-red text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">0</span>
+                </button>
+                <button class="text-gray-800 hover:text-brand-red transition">
+                    <i class="far fa-user text-lg"></i>
+                </button>
+                
+                <button class="xl:hidden text-gray-800 focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
         </div>
     </div>
-</section>
 
-<!-- Footer -->
-@include('partials.footer')
+    <!-- Slide-out Cart Drawer (Hidden by default) -->
+    <div id="cartDrawerOverlay" onclick="toggleCart()" class="fixed inset-0 bg-black/40 z-[60] hidden opacity-0 transition-opacity duration-300"></div>
+    <div id="cartDrawer" class="fixed inset-y-0 right-0 w-[400px] max-w-full bg-white shadow-2xl z-[70] transform translate-x-full transition-transform duration-300 flex flex-col">
+        <!-- Cart Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-100">
+            <h2 class="text-xl font-medium text-brand-dark">Your Cart (0)</h2>
+            <button onclick="toggleCart()" class="bg-brand-red text-white w-8 h-8 flex items-center justify-center hover:bg-red-700 transition">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- Cart Content (Empty State) -->
+        <div class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+            <svg class="w-48 h-48 mb-6 text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <p class="text-gray-500">Your shopping cart is currently empty.</p>
+            <a href="{{ route('shop') }}" class="mt-8 bg-brand-dark text-white px-8 py-3 hover:bg-brand-red transition uppercase tracking-wider text-sm">Return to Shop</a>
+        </div>
+    </div>
+</header>
 
-@endsection
+<script>
+    function toggleCart() {
+        const drawer = document.getElementById('cartDrawer');
+        const overlay = document.getElementById('cartDrawerOverlay');
+        
+        if (drawer.classList.contains('translate-x-full')) {
+            // Open
+            drawer.classList.remove('translate-x-full');
+            overlay.classList.remove('hidden');
+            setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        } else {
+            // Close
+            drawer.classList.add('translate-x-full');
+            overlay.classList.add('opacity-0');
+            setTimeout(() => overlay.classList.add('hidden'), 300);
+            document.body.style.overflow = '';
+        }
+    }
+</script>
