@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +19,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', // Added this in case you want to separate 'admin' from normal 'user' later
+        'role',
     ];
 
     /**
@@ -44,14 +42,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    // Relationship: A User can have many Orders
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
     
-    // Helper to easily check if user is an admin
-    public function isAdmin()
+    // THIS IS THE METHOD CAUSING THE ERROR IF IT IS MISSING
+    public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }

@@ -1,27 +1,43 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    // Show details for a single product
-    public function show($slug)
+    public function index()
     {
-        $product = Product::with('category')
-            ->where('slug', $slug)
-            ->where('is_active', true)
-            ->firstOrFail();
+        // Eager load category to prevent N+1 query issues
+        $products = Product::with('category')->latest()->get(); 
+        return view('admin.products.index', compact('products'));
+    }
 
-        // Fetch related products from the same category
-        $relatedProducts = Product::where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id)
-            ->where('is_active', true)
-            ->take(4)
-            ->get();
+    public function create()
+    {
+        $categories = Category::where('is_active', 1)->get();
+        return view('admin.products.create', compact('categories'));
+    }
 
-        return view('pages.product', compact('product', 'relatedProducts'));
+    public function store(Request $request)
+    {
+        // ... (Keep existing store logic from previous response)
+    }
+
+    // Add this destroy method to handle deletions!
+    public function destroy(Product $product)
+    {
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+        
+        $product->delete();
+        
+        return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully!');
     }
 }

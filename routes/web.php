@@ -1,53 +1,65 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+// Public Site Controllers
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\ShopController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
-/*
-|--------------------------------------------------------------------------
-| Public Website Routes
-|--------------------------------------------------------------------------
-*/
+// Admin Panel Controllers
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProductManageController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\OrderController;
 
+// ==========================================
+// 1. PUBLIC SHOP ROUTES
+// ==========================================
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-// Shop & Products
-Route::get('/shop', [\App\Http\Controllers\ShopController::class, 'index'])->name('shop');
-Route::get('/product/{slug}', [\App\Http\Controllers\ShopController::class, 'show'])->name('product.show');
+Route::get('/shop', [ShopController::class, 'index'])->name('shop');
+Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
 
 // Cart Routes
-Route::get('/cart', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add/{id}', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
-Route::post('/cart/update', [\App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
-Route::post('/cart/remove', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 
 // Checkout Routes
-Route::get('/checkout', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout/process', [\App\Http\Controllers\CheckoutController::class, 'process'])->name('checkout.process');
-
-// Contact Page
-Route::get('/contact', function () {
-    return view('pages.contact');
-})->name('contact');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 
 
-/*
-|--------------------------------------------------------------------------
-| Admin Panel Routes
-|--------------------------------------------------------------------------
-*/
-
+// ==========================================
+// 2. ADMIN PORTAL ROUTES
+// ==========================================
 Route::prefix('admin')->name('admin.')->group(function () {
     
-    // Dashboard Placeholder
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    // --> Guest Admin Routes
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 
-    // Product Management
-    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+    // --> Protected Admin Routes
+    Route::middleware(['admin'])->group(function () {
+        
+        // Admin Dashboard
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        
+        // Admin Logout
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+        
+        // Categories (Creates index, create, store, edit, update, destroy)
+        Route::resource('categories', CategoryController::class);
+
+        // Products (Creates index, create, store, edit, update, destroy)
+        Route::resource('products', ProductManageController::class);
+        
+        // Orders 
+        Route::resource('orders', OrderController::class)->except(['create', 'store', 'destroy']);
+        
+    });
 });
