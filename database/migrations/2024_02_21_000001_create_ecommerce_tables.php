@@ -11,23 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-     Schema::create('users', function (Blueprint $table) {
+        // 1. Users & Auth Tables
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            
-            // ---> THE ROLE COLUMN <---
-            // Default is 'user'. We can change it to 'admin' for specific accounts.
             $table->string('role')->default('user'); 
-            
             $table->rememberToken();
             $table->timestamps();
         });
 
-        // Laravel 11 also includes password reset tokens and sessions in this file automatically
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
@@ -42,7 +37,8 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
-        // 1. Create Categories Table
+
+        // 2. Categories
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -52,30 +48,34 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 2. Create Products Table (Depends on Categories)
+        // 3. Products
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            
             $table->string('name');
             $table->string('slug')->unique();
+            
+            // --> NEW ADDED FIELDS <--
             $table->string('sku')->nullable();
             $table->text('short_description')->nullable();
-            $table->longText('description')->nullable();
-            
+            $table->longText('description')->nullable(); 
+            // ------------------------
+
             $table->decimal('price', 10, 2);
             $table->decimal('sale_price', 10, 2)->nullable();
             
-            $table->string('image')->nullable();
-            $table->json('gallery')->nullable();
             $table->integer('stock_quantity')->default(0);
+            
+            $table->string('image')->nullable();
+            // --> GALLERY FIELD ADDED <--
+            $table->json('gallery')->nullable();
             
             $table->boolean('is_featured')->default(false);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
 
-        // 3. Create Orders Table (Depends on Users)
+        // 4. Orders
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
@@ -94,14 +94,14 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 4. Create Order Items Table (Depends on Orders and Products)
+        // 5. Order Items
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             
             $table->integer('quantity');
-            $table->decimal('price', 10, 2); // Price at the time of purchase
+            $table->decimal('price', 10, 2); 
             
             $table->timestamps();
         });
@@ -112,12 +112,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
-        Schema::dropIfExists('sessions');      
         Schema::dropIfExists('order_items');
         Schema::dropIfExists('orders');
         Schema::dropIfExists('products');
         Schema::dropIfExists('categories');
+        Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };

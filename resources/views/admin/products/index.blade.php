@@ -1,4 +1,4 @@
-@extends('admin.layouts.admin')
+@extends('layouts.admin')
 
 @section('content')
 <div class="container mx-auto px-4 py-6">
@@ -79,10 +79,12 @@
         </table>
     </div>
     
-    <!-- Pagination -->
+    <!-- FIX: Added method_exists check before calling links() -->
+    @if(method_exists($products, 'links'))
     <div class="mt-4">
         {{ $products->links() }}
     </div>
+    @endif
 </div>
 
 <!-- Delete Modal -->

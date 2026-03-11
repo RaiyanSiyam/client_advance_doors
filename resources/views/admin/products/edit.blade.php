@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('admin.layouts.admin')
 
 @section('header_title', 'Edit Product')
 @section('header_subtitle', 'Update details for ' . $product->name)

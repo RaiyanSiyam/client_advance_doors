@@ -1,11 +1,14 @@
-@extends('layouts.admin')
-
-@section('header_title', 'Create Product')
-@section('header_subtitle', 'Add a new item to your catalog with rich media.')
+@extends('admin.layouts.admin')
 
 @section('content')
-<div class="max-w-4xl mx-auto" x-data="productImageManager()">
+<!-- IMPORTANT: Removed the parentheses from productImageManager -->
+<div class="max-w-4xl mx-auto" x-data="productImageManager">
     
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Create Product</h1>
+        <p class="text-gray-600">Add a new item to your catalog with rich media.</p>
+    </div>
+
     <div class="mb-6">
         <a href="{{ route('admin.products.index') }}" class="text-zinc-500 hover:text-zinc-900 transition-colors flex items-center gap-2 text-sm font-semibold w-fit px-3 py-1.5 rounded-lg hover:bg-zinc-100 -ml-3">
             <i class="fas fa-arrow-left text-xs"></i> Back to Catalog
@@ -26,170 +29,218 @@
     <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
         
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] border border-zinc-100">
-            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-zinc-100">
-                <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
-                    <i class="fas fa-info-circle"></i>
-                </div>
-                <h2 class="text-lg font-bold text-zinc-900">Basic Information</h2>
-            </div>
+        <!-- Basic Details -->
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-zinc-100">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Basic Details</h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Name -->
                 <div>
-                    <label class="block text-sm font-semibold text-zinc-700 mb-2">Product Name <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" value="{{ old('name') }}" class="w-full bg-zinc-50/50 border border-zinc-200 p-3 rounded-xl focus:outline-none focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all text-sm" placeholder="e.g. Premium Teak Wood Door" required>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Product Name *</label>
+                    <input type="text" name="name" value="{{ old('name') }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-shadow">
                 </div>
 
+                <!-- Product Code (SKU) -->
                 <div>
-                    <label class="block text-sm font-semibold text-zinc-700 mb-2">Category <span class="text-red-500">*</span></label>
-                    <select name="category_id" class="w-full bg-zinc-50/50 border border-zinc-200 p-3 rounded-xl focus:outline-none focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all text-sm appearance-none" required>
-                        <option value="">Select a Category</option>
-                        @foreach($categories ?? [] as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Product Code (SKU)</label>
+                    <input type="text" name="sku" value="{{ old('sku') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-shadow" placeholder="e.g., AD-DOOR-01">
+                </div>
+
+                <!-- Category -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+                    <select name="category_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                        <option value="">Select Category</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
-            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <!-- Stock Quantity -->
                 <div>
-                    <label class="block text-sm font-semibold text-zinc-700 mb-2">SKU</label>
-                    <input type="text" name="sku" value="{{ old('sku') }}" class="w-full bg-zinc-50/50 border border-zinc-200 p-3 rounded-xl focus:outline-none focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all text-sm font-mono" placeholder="DOOR-001">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
+                    <input type="number" name="stock_quantity" value="{{ old('stock_quantity', 0) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-shadow">
                 </div>
-                <div>
-                    <label class="block text-sm font-semibold text-zinc-700 mb-2">Regular Price (৳) <span class="text-red-500">*</span></label>
-                    <input type="number" step="0.01" name="price" value="{{ old('price') }}" class="w-full bg-zinc-50/50 border border-zinc-200 p-3 rounded-xl focus:outline-none focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all text-sm" placeholder="0.00" required>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-zinc-700 mb-2">Sale Price (৳)</label>
-                    <input type="number" step="0.01" name="sale_price" value="{{ old('sale_price') }}" class="w-full bg-zinc-50/50 border border-zinc-200 p-3 rounded-xl focus:outline-none focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all text-sm" placeholder="Optional">
-                </div>
-            </div>
 
-            <div class="mb-6">
-                <label class="block text-sm font-semibold text-zinc-700 mb-2">Full Details</label>
-                <textarea name="description" rows="5" class="w-full bg-zinc-50/50 border border-zinc-200 p-3 rounded-xl focus:outline-none focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all text-sm" placeholder="Comprehensive product specifications...">{{ old('description') }}</textarea>
+                <!-- Price -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Price *</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="text-gray-500 font-medium">৳</span>
+                        </div>
+                        <input type="number" step="0.01" name="price" value="{{ old('price') }}" required class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                    </div>
+                </div>
+
+                <!-- Sale Price -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Sale Price (Optional)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="text-gray-500 font-medium">৳</span>
+                        </div>
+                        <input type="number" step="0.01" name="sale_price" value="{{ old('sale_price') }}" class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] border border-zinc-100">
-            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-zinc-100">
-                <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
-                    <i class="fas fa-images"></i>
+        <!-- Descriptions -->
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-zinc-100">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Descriptions</h2>
+            <div class="space-y-6">
+                <!-- Short Description -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
+                    <textarea name="short_description" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">{{ old('short_description') }}</textarea>
+                    <p class="text-xs text-gray-500 mt-1">A brief summary that appears on product cards.</p>
                 </div>
-                <h2 class="text-lg font-bold text-zinc-900">Product Media</h2>
-            </div>
-            
-            <!-- Main Image Upload -->
-            <div class="mb-8">
-                <label class="block text-sm font-semibold text-zinc-700 mb-2">Main Cover Image <span class="text-red-500">*</span></label>
-                <div class="relative border-2 border-dashed border-zinc-200 rounded-xl bg-zinc-50/50 hover:bg-zinc-50 hover:border-red-300 transition-colors group flex items-center justify-center overflow-hidden" :class="mainPreview ? 'p-0 border-solid border-zinc-200' : 'p-8'">
-                    
-                    <!-- File Input -->
-                    <input type="file" name="image" @change="previewMain" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" required accept="image/*">
-                    
-                    <!-- Empty State -->
-                    <div x-show="!mainPreview" class="text-center">
-                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm border border-zinc-100 group-hover:scale-110 group-hover:text-red-600 transition-all text-zinc-400">
-                            <i class="fas fa-camera text-xl"></i>
-                        </div>
-                        <p class="text-sm font-medium text-zinc-800 mb-1">Upload Main Image</p>
-                        <p class="text-xs text-zinc-500">1000x1000px recommended (Max 2MB)</p>
-                    </div>
-
-                    <!-- Image Preview -->
-                    <div x-show="mainPreview" class="w-full relative bg-zinc-100 flex justify-center h-64">
-                        <img :src="mainPreview" class="h-full object-contain">
-                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white backdrop-blur-sm">
-                            <i class="fas fa-sync-alt text-2xl mb-2"></i>
-                            <span class="text-sm font-semibold">Click to Change</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Additional Gallery Images Upload -->
-            <div class="mb-6 border-t border-zinc-100 pt-8">
-                <label class="block text-sm font-semibold text-zinc-700 mb-2">Additional Gallery Photos</label>
                 
-                <div class="border-2 border-dashed border-zinc-200 rounded-xl p-6 text-center bg-zinc-50/50 hover:bg-zinc-50 hover:border-red-300 transition-colors group relative mb-4">
-                    <input type="file" name="gallery[]" multiple @change="previewGallery" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" accept="image/*">
-                    <div class="flex items-center justify-center gap-3">
-                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-zinc-100 group-hover:text-red-600 transition-all text-zinc-400">
-                            <i class="fas fa-images"></i>
-                        </div>
-                        <div class="text-left">
-                            <p class="text-sm font-bold text-zinc-800">Add More Photos</p>
-                            <p class="text-xs text-zinc-500">Select multiple files</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Gallery Previews Grid -->
-                <div x-show="galleryPreviews.length > 0" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4">
-                    <template x-for="(src, index) in galleryPreviews" :key="index">
-                        <div class="relative group aspect-square rounded-xl border border-zinc-200 overflow-hidden bg-zinc-50">
-                            <img :src="src" class="w-full h-full object-cover">
-                            <button type="button" @click.stop.prevent="removeGalleryPreview(index)" class="absolute top-2 right-2 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-red-700 z-30">
-                                <i class="fas fa-times text-xs"></i>
-                            </button>
-                        </div>
-                    </template>
+                <!-- Full Description -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Description</label>
+                    <textarea name="description" rows="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">{{ old('description') }}</textarea>
+                    <p class="text-xs text-gray-500 mt-1">Detailed product information, specifications, materials, etc.</p>
                 </div>
             </div>
+        </div>
 
-            <!-- Settings -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 pt-8 border-t border-zinc-100">
-                <label class="flex items-start p-4 border border-zinc-200 rounded-xl cursor-pointer hover:bg-zinc-50 transition-colors has-[:checked]:border-red-500 has-[:checked]:bg-red-50/30">
-                    <div class="flex items-center h-5">
-                        <input type="checkbox" name="is_active" value="1" class="w-5 h-5 text-red-600 rounded border-zinc-300 focus:ring-red-500" checked>
+        <!-- Media Uploads -->
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-zinc-100">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Media</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Main Image Upload -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Main Image</label>
+                    <div class="flex items-center justify-center w-full">
+                        <label class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors overflow-hidden relative group">
+                            
+                            <template x-if="mainPreview">
+                                <div class="absolute inset-0 w-full h-full bg-white">
+                                    <img :src="mainPreview" class="w-full h-full object-contain p-2">
+                                    <button type="button" @click.prevent="clearMainImage()" class="absolute top-2 right-2 bg-white/90 hover:bg-red-500 hover:text-white text-red-500 rounded-full w-8 h-8 flex items-center justify-center transition-all shadow-md">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </template>
+
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6" x-show="!mainPreview">
+                                <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-3 group-hover:text-blue-500 transition-colors"></i>
+                                <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload main image</span></p>
+                            </div>
+                            <input type="file" name="image" id="mainImageInput" class="hidden" accept="image/*" @change="previewMain" />
+                        </label>
                     </div>
-                    <div class="ml-3 text-sm">
-                        <span class="font-bold text-zinc-900 block">Publish Product</span>
-                        <span class="text-zinc-500 text-xs">Make this product visible immediately.</span>
+                </div>
+
+                <!-- Gallery Upload -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Gallery Images</label>
+                    <div class="flex items-center justify-center w-full mb-3">
+                        <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors group">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <i class="fas fa-images text-xl text-gray-400 mb-1 group-hover:text-blue-500 transition-colors"></i>
+                                <p class="text-sm text-gray-500"><span class="font-semibold">Upload Multiple Images</span></p>
+                            </div>
+                            <input type="file" name="gallery[]" id="galleryInput" multiple class="hidden" accept="image/*" @change="previewGallery" />
+                        </label>
                     </div>
+
+                    <!-- Gallery Previews Grid -->
+                    <div class="grid grid-cols-4 gap-2" x-show="galleryPreviews.length > 0">
+                        <template x-for="(preview, index) in galleryPreviews" :key="index">
+                            <div class="aspect-square rounded-lg border border-gray-200 overflow-hidden relative group bg-white shadow-sm">
+                                <img :src="preview" class="w-full h-full object-contain p-1">
+                                <button type="button" @click.prevent="removeGalleryPreview(index)" class="absolute top-1 right-1 bg-white hover:bg-red-500 hover:text-white text-red-500 rounded-full w-6 h-6 flex items-center justify-center transition-all shadow-md opacity-0 group-hover:opacity-100">
+                                    <i class="fas fa-times text-xs"></i>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-zinc-100">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Status & Toggles</h2>
+            <div class="flex gap-6">
+                <label class="inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="is_active" class="sr-only peer" checked>
+                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                    <span class="ms-3 text-sm font-medium text-gray-700">Active</span>
+                </label>
+
+                <label class="inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="is_featured" class="sr-only peer">
+                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                    <span class="ms-3 text-sm font-medium text-gray-700">Featured</span>
                 </label>
             </div>
         </div>
 
-        <!-- Sticky Footer -->
-        <div class="flex justify-end gap-3 sticky bottom-4 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)] border border-zinc-100 z-20">
-            <a href="{{ route('admin.products.index') }}" class="px-6 py-2.5 rounded-xl font-semibold text-zinc-600 hover:bg-zinc-100 transition-colors text-sm flex items-center">Cancel</a>
-            <button type="submit" class="px-8 py-2.5 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 shadow-lg shadow-red-600/30 transition-all active:scale-95 flex items-center gap-2 text-sm">
+        <div class="flex justify-end pt-4">
+            <button type="submit" class="bg-red-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-700 shadow-lg shadow-red-600/30 transition-all active:scale-95 flex items-center gap-2 text-sm">
                 <i class="fas fa-check"></i> Save Product
             </button>
         </div>
     </form>
 </div>
 
-<!-- Alpine Script for Previews -->
+<!-- FIXED ALPINE SCRIPT -->
 <script>
-    function productImageManager() {
-        return {
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('productImageManager', () => ({
             mainPreview: null,
-            galleryPreviews: [],
-            
+            galleryFiles: [],     
+            galleryPreviews: [],  
+
+            // Main Image Logic
             previewMain(event) {
                 const file = event.target.files[0];
                 if (file) {
                     this.mainPreview = URL.createObjectURL(file);
                 }
             },
-            
+            clearMainImage() {
+                this.mainPreview = null;
+                document.getElementById('mainImageInput').value = ''; 
+            },
+
+            // Gallery Logic (Appending & Deleting)
             previewGallery(event) {
-                const files = Array.from(event.target.files);
-                // In a real app, you might want to append rather than replace if the user selects multiple times.
-                // For this UI, replacing preview array matches standard input multiple behavior.
-                this.galleryPreviews = files.map(file => URL.createObjectURL(file));
+                const newFiles = Array.from(event.target.files);
+                const dataTransfer = new DataTransfer();
+
+                // 1. Keep the old files
+                this.galleryFiles.forEach(file => dataTransfer.items.add(file));
+
+                // 2. Add the new files
+                newFiles.forEach(file => {
+                    dataTransfer.items.add(file);
+                    this.galleryFiles.push(file);
+                    this.galleryPreviews.push(URL.createObjectURL(file));
+                });
+
+                // 3. Update the hidden HTML input
+                document.getElementById('galleryInput').files = dataTransfer.files;
             },
             
             removeGalleryPreview(index) {
+                // 1. Remove from our arrays
+                this.galleryFiles.splice(index, 1);
                 this.galleryPreviews.splice(index, 1);
-                // Note: Removing visually does NOT remove from the HTML input element due to browser security constraints on file lists.
-                // Usually handled backend side by parsing an array of kept images, or via JS FormData.
-                // This is a UI mockup representation.
+
+                // 2. Rebuild the file input
+                const dataTransfer = new DataTransfer();
+                this.galleryFiles.forEach(file => dataTransfer.items.add(file));
+                document.getElementById('galleryInput').files = dataTransfer.files;
             }
-        }
-    }
+        }));
+    });
 </script>
 @endsection
