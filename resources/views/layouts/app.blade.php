@@ -29,160 +29,105 @@
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen font-sans">
 
-
     <!-- Main Header -->
-    <header class="w-full bg-white sticky top-0 z-50 border-b border-gray-100 shadow-sm transition-all duration-300" id="mainHeader">
-        <div class="container mx-auto px-4 lg:px-8">
-            <div class="flex items-center justify-between h-[72px]">
+    <header id="mainHeader" class="w-full fixed top-0 z-50 transition-all duration-300 bg-transparent border-transparent">
+      
+        <!-- Main Navigation Bar -->
+        <div id="navContainer" class="container mx-auto px-4 py-5 transition-all duration-300">
+            <div class="flex items-center justify-between">
                 
                 <!-- Logo -->
-                <a href="{{ route('home') ?? '#' }}" class="flex-shrink-0 flex items-center group">
-                    <div class="bg-brand-red text-white font-bold text-xl md:text-2xl tracking-tight px-3 py-1 mr-1 transition-transform group-hover:scale-105">
-                        ADVANCE
-                    </div>
-                    <div class="text-brand-dark font-bold text-xl md:text-2xl tracking-tighter">
-                        DOORS
+                <a href="{{ route('home') ?? '/' }}" class="flex-shrink-0">
+                    <div class="text-2xl font-bold tracking-tighter">
+                        <span id="logoText" class="text-white transition-colors duration-300">ADVANCE</span><span class="text-brand-red">DOORS</span>
                     </div>
                 </a>
 
-                <!-- Desktop Menu (Updated Navigation) -->
-                <nav class="hidden lg:flex flex-1 justify-center px-8 h-full">
-                    <ul class="flex space-x-10 text-[15px] font-medium text-gray-800 h-full">
-                        
-                        <li class="h-full flex items-center group">
-                            <a href="#" class="relative group/link hover:text-brand-red transition-colors py-2 h-full flex items-center">
-                                Living Room
-                                <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-brand-red transition-all duration-300 group-hover/link:w-full"></span>
-                            </a>
-                        </li>
-
-                        <li class="h-full flex items-center group">
-                            <a href="#" class="relative group/link hover:text-brand-red transition-colors py-2 h-full flex items-center">
-                                Bedroom
-                                <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-brand-red transition-all duration-300 group-hover/link:w-full"></span>
-                            </a>
-                        </li>
-
-                        <li class="h-full flex items-center group">
-                            <a href="#" class="relative group/link hover:text-brand-red transition-colors py-2 h-full flex items-center">
-                                Dining
-                                <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-brand-red transition-all duration-300 group-hover/link:w-full"></span>
-                            </a>
-                        </li>
-
-                        <li class="h-full flex items-center group">
-                            <a href="#" class="relative group/link hover:text-brand-red transition-colors py-2 h-full flex items-center">
-                                Door
-                                <span class="absolute bottom-0 left-0 w-0 h-[2px] bg-brand-red transition-all duration-300 group-hover/link:w-full"></span>
-                            </a>
-                        </li>
-                        
+                <!-- Main Navigation Links (Desktop) -->
+                <nav class="hidden lg:block">
+                    <ul class="flex space-x-8 items-center font-medium">
+                        <li><a href="{{ route('home') ?? '/' }}" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Home</a></li>
+                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Doors</a></li>
+                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Living</a></li>
+                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Bedroom</a></li>
+                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Dining</a></li>
+                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Office</a></li>
                     </ul>
                 </nav>
 
-                <!-- Right Icons -->
-                <div class="flex items-center space-x-5 lg:space-x-6 text-gray-800">
-                    <button class="hover:text-brand-red transition">
-                        <i class="fas fa-search text-lg"></i>
-                    </button>
-                    <button class="hidden lg:block hover:text-brand-red transition">
-                        <i class="far fa-heart text-lg"></i>
-                    </button>
-                    <!-- Cart Toggle Button -->
-                    <button onclick="toggleCart()" class="hover:text-brand-red transition relative group">
-                        <i class="fas fa-shopping-bag text-lg"></i>
-                        <span class="absolute -top-1.5 -right-2 bg-brand-red text-white text-[9px] font-bold rounded-full h-4 w-4 flex items-center justify-center border-2 border-white shadow-sm group-hover:scale-110 transition-transform">0</span>
-                    </button>
-                    <button class="hidden lg:block hover:text-brand-red transition">
-                        <i class="far fa-user text-lg"></i>
-                    </button>
+                <!-- Right Side Icons & Actions -->
+                <div class="flex items-center space-x-5">
+                    <!-- Search Form (Hidden on mobile) -->
+                    <div class="hidden md:block relative">
+                        <input type="text" placeholder="Search..." class="w-48 pl-4 pr-10 py-1.5 rounded-full border border-transparent focus:ring-2 focus:ring-brand-red bg-white/20 text-white placeholder-gray-200 outline-none backdrop-blur-sm transition-all duration-300" id="searchInput">
+                        <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white hover:text-brand-red transition-colors duration-300" id="searchIcon">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
                     
-                    <!-- Mobile Menu Toggle -->
-                    <button class="lg:hidden text-gray-800 hover:text-brand-red focus:outline-none">
+                    <!-- Mobile Search Icon -->
+                    <button class="md:hidden nav-icon text-white hover:text-brand-red transition-colors duration-300">
+                        <i class="fas fa-search text-xl"></i>
+                    </button>
+
+                    <!-- User Icon -->
+                    <button class="nav-icon text-white hover:text-brand-red transition-colors duration-300"><i class="far fa-user text-xl"></i></button>
+                    
+                    <!-- Cart Icon -->
+                    <button onclick="toggleCartDrawer()" class="nav-icon text-white hover:text-brand-red transition-colors duration-300 relative">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span class="absolute -top-2 -right-2 bg-brand-red text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
+                    </button>
+
+                    <!-- Mobile Menu Button (Compact version fix) -->
+                    <button onclick="toggleMobileMenu()" class="lg:hidden nav-icon text-white hover:text-brand-red transition-colors duration-300 focus:outline-none">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
             </div>
         </div>
+
+        <!-- Mobile Menu Dropdown (Hidden by default) -->
+        <div id="mobileMenu" class="hidden lg:hidden bg-white shadow-lg border-t border-gray-200 absolute w-full left-0 top-full">
+            <div class="px-4 py-2 space-y-1 text-gray-800">
+                <a href="{{ route('home') ?? '/' }}" class="block py-2 text-brand-red font-medium">Home</a>
+                <a href="#" class="block py-2 border-b hover:text-brand-red transition">Doors</a>
+                <a href="#" class="block py-2 border-b hover:text-brand-red transition">Living</a>
+                <a href="#" class="block py-2 border-b hover:text-brand-red transition">Bedroom</a>
+                <a href="#" class="block py-2 border-b hover:text-brand-red transition">Dining</a>
+                <a href="#" class="block py-2 hover:text-brand-red transition">Office</a>
+            </div>
+        </div>
     </header>
 
-    <!-- Slide-out Cart Drawer (Lag-Free Version) -->
-    <!-- We use pointer-events-none instead of display:none (hidden) to prevent rendering lag -->
-    <div id="cartDrawerOverlay" onclick="toggleCart()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] opacity-0 pointer-events-none transition-opacity duration-300 ease-out"></div>
-    
-    <div id="cartDrawer" class="fixed inset-y-0 right-0 w-[400px] max-w-full bg-white shadow-2xl z-[70] transform translate-x-full transition-transform duration-300 ease-out flex flex-col will-change-transform">
-        <div class="flex items-center justify-between p-6 border-b border-gray-100 bg-gray-50">
-            <h2 class="text-lg font-bold text-brand-dark uppercase tracking-wide">Shopping Cart <span class="text-brand-red font-normal">(0)</span></h2>
-            <button onclick="toggleCart()" class="text-gray-400 hover:text-brand-red transition transform hover:rotate-90 duration-300">
-                <i class="fas fa-times text-xl"></i>
-            </button>
-        </div>
-        
-        <div class="flex-1 flex flex-col items-center justify-center p-8 text-center bg-white">
-            <div class="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6">
-                <i class="fas fa-shopping-bag text-4xl text-gray-300"></i>
-            </div>
-            <h3 class="text-xl font-medium text-brand-dark mb-2">Your cart is empty</h3>
-            <p class="text-gray-500 font-light mb-8">Looks like you haven't added any furniture yet.</p>
-            <a href="#" class="w-full bg-brand-red text-white px-8 py-3.5 hover:bg-red-800 transition uppercase tracking-widest text-sm font-medium text-center">Start Shopping</a>
-        </div>
-    </div>
-
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <main class="flex-grow">
         @yield('content')
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-brand-dark text-white pt-16 pb-8">
-        <div class="container mx-auto px-4 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-                <div class="flex items-center mb-6">
-                    <div class="bg-brand-red text-white font-bold text-lg px-2 py-1 mr-1">ADVANCE</div>
-                    <div class="text-white font-bold text-lg">DOORS</div>
-                </div>
-                <p class="text-gray-400 text-sm leading-relaxed mb-6">Crafting premium doors and furniture with uncompromising quality and timeless elegance.</p>
-            </div>
-            
-            <div>
-                <h4 class="text-lg font-semibold mb-6">Quick Links</h4>
-                <ul class="space-y-3 text-sm text-gray-400">
-                    <li><a href="#" class="hover:text-brand-red transition">About Us</a></li>
-                    <li><a href="#" class="hover:text-brand-red transition">Living Room</a></li>
-                    <li><a href="#" class="hover:text-brand-red transition">Bedroom</a></li>
-                    <li><a href="#" class="hover:text-brand-red transition">Doors</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="text-lg font-semibold mb-6">Customer Service</h4>
-                <ul class="space-y-3 text-sm text-gray-400">
-                    <li><a href="#" class="hover:text-brand-red transition">Contact Us</a></li>
-                    <li><a href="#" class="hover:text-brand-red transition">Shipping Policy</a></li>
-                    <li><a href="#" class="hover:text-brand-red transition">Returns & Exchanges</a></li>
-                    <li><a href="#" class="hover:text-brand-red transition">Track Order</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="text-lg font-semibold mb-6">Contact Info</h4>
-                <div class="space-y-3 text-gray-400">
-                    <p class="text-sm"><i class="fas fa-map-marker-alt mr-2"></i> 123 Furniture Avenue, City, State</p>
-                    <p class="text-sm"><i class="fas fa-phone-alt mr-2"></i> +1 234-567890</p>
-                    <p class="text-sm"><i class="fas fa-envelope mr-2"></i> info@advancedoors.com</p>
-                </div>
-            </div>
+    <!-- Cart Drawer Overlays -->
+    <div id="cartDrawerOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden opacity-0 pointer-events-none transition-opacity duration-300" onclick="toggleCartDrawer()"></div>
+    <div id="cartDrawer" class="fixed right-0 top-0 h-full w-80 bg-white shadow-xl z-[70] transform translate-x-full transition-transform duration-300">
+        <div class="p-4 flex justify-between items-center border-b">
+            <h2 class="text-lg font-bold">Your Cart</h2>
+            <button onclick="toggleCartDrawer()" class="text-gray-500 hover:text-red-500"><i class="fas fa-times"></i></button>
         </div>
-        
-        <div class="text-center text-sm text-gray-500 mt-12 border-t border-slate-800 pt-6">
-            &copy; {{ date('Y') }} Advance Doors. All rights reserved.
+        <div class="p-8 text-center text-gray-500">
+            <p>Your cart is empty.</p>
         </div>
-    </footer>
+    </div>
 
     <!-- Scripts -->
     <script>
-        // High-Performance Lag-Free Cart Toggle
-        function toggleCart() {
+        // Fix for Mobile Menu
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            if(mobileMenu) {
+                mobileMenu.classList.toggle('hidden');
+            }
+        }
+
+        function toggleCartDrawer() {
             const drawer = document.getElementById('cartDrawer');
             const overlay = document.getElementById('cartDrawerOverlay');
             
@@ -192,9 +137,12 @@
                 // Open Drawer
                 drawer.classList.remove('translate-x-full');
                 
-                // Show Overlay (using pointer-events to prevent reflow lag)
-                overlay.classList.remove('opacity-0', 'pointer-events-none');
-                overlay.classList.add('opacity-100', 'pointer-events-auto');
+                // Show Overlay
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0', 'pointer-events-none');
+                    overlay.classList.add('opacity-100', 'pointer-events-auto');
+                }, 10);
                 
                 // Prevent background scrolling
                 document.body.style.overflow = 'hidden';
@@ -205,20 +153,115 @@
                 // Hide Overlay
                 overlay.classList.remove('opacity-100', 'pointer-events-auto');
                 overlay.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
                 
                 // Restore background scrolling
                 document.body.style.overflow = '';
             }
         }
 
-        // Shrink header on scroll (Premium effect)
+        // Shrink header on scroll (Premium effect + Blending with Picture)
         window.addEventListener('scroll', function() {
             const header = document.getElementById('mainHeader');
+            const topBar = document.getElementById('topBar');
+            const navContainer = document.getElementById('navContainer');
+            const logoText = document.getElementById('logoText');
+            const searchInput = document.getElementById('searchInput');
+            const searchIcon = document.getElementById('searchIcon');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const navIcons = document.querySelectorAll('.nav-icon');
+
             if (window.scrollY > 50) {
-                header.classList.add('shadow-md');
+                // Scrolled Down State: White Header
+                header.classList.remove('bg-transparent', 'border-transparent');
+                header.classList.add('bg-white', 'shadow-md', 'border-b', 'border-gray-200');
+
+                // Collapse top bar
+                if(topBar) {
+                    topBar.style.maxHeight = '0px';
+                    topBar.style.opacity = '0';
+                    topBar.style.padding = '0';
+                }
+                
+                // Make navbar slightly thinner
+                if(navContainer) {
+                    navContainer.classList.remove('py-4');
+                    navContainer.classList.add('py-2');
+                }
+
+                // Change text from White to Dark
+                if(logoText) {
+                    logoText.classList.remove('text-white');
+                    logoText.classList.add('text-brand-dark');
+                }
+                navLinks.forEach(link => {
+                    link.classList.remove('text-white');
+                    link.classList.add('text-gray-800');
+                });
+                navIcons.forEach(icon => {
+                    icon.classList.remove('text-white');
+                    icon.classList.add('text-gray-800');
+                });
+
+                // Update Search Input Colors
+                if(searchInput) {
+                    searchInput.classList.remove('bg-white/20', 'text-white', 'placeholder-gray-200', 'border-transparent');
+                    searchInput.classList.add('bg-gray-100', 'text-gray-800', 'placeholder-gray-500', 'border-gray-300');
+                }
+                if(searchIcon) {
+                    searchIcon.classList.remove('text-white');
+                    searchIcon.classList.add('text-gray-600');
+                }
+
             } else {
-                header.classList.remove('shadow-md');
+                // Top State: Transparent Header
+                header.classList.add('bg-transparent', 'border-transparent');
+                header.classList.remove('bg-white', 'shadow-md', 'border-b', 'border-gray-200');
+
+                // Expand top bar
+                if(topBar) {
+                    topBar.style.maxHeight = '50px';
+                    topBar.style.opacity = '1';
+                    topBar.style.padding = '0.5rem 0';
+                }
+
+                // Restore navbar thickness
+                if(navContainer) {
+                    navContainer.classList.add('py-4');
+                    navContainer.classList.remove('py-2');
+                }
+
+                // Change text back to White
+                if(logoText) {
+                    logoText.classList.add('text-white');
+                    logoText.classList.remove('text-brand-dark');
+                }
+                navLinks.forEach(link => {
+                    link.classList.add('text-white');
+                    link.classList.remove('text-gray-800');
+                });
+                navIcons.forEach(icon => {
+                    icon.classList.add('text-white');
+                    icon.classList.remove('text-gray-800');
+                });
+
+                // Revert Search Input Colors
+                if(searchInput) {
+                    searchInput.classList.add('bg-white/20', 'text-white', 'placeholder-gray-200', 'border-transparent');
+                    searchInput.classList.remove('bg-gray-100', 'text-gray-800', 'placeholder-gray-500', 'border-gray-300');
+                }
+                if(searchIcon) {
+                    searchIcon.classList.add('text-white');
+                    searchIcon.classList.remove('text-gray-600');
+                }
             }
+        });
+
+        // Trigger scroll immediately on load to apply proper styles if the page is reloaded halfway down
+        document.addEventListener('DOMContentLoaded', () => {
+            window.dispatchEvent(new Event('scroll'));
         });
     </script>
 </body>
