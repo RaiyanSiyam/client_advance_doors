@@ -1,138 +1,196 @@
-@extends('layouts.admin')
+@extends('admin.layouts.admin')
 
 @section('content')
-<div class="container mx-auto px-4 py-6">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Products</h1>
-        <a href="{{ route('admin.products.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
-            + Add New Product
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">Catalog Management</h1>
+            <p class="text-gray-600 text-sm mt-1">Manage your products, categories, and inventory.</p>
+        </div>
+        <a href="{{ route('admin.products.create') }}" class="bg-zinc-900 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-black shadow-lg shadow-zinc-900/20 transition-all flex items-center gap-2 text-sm">
+            <i class="fas fa-plus"></i> Add Product
         </a>
     </div>
 
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <div class="bg-white shadow-md rounded my-6 overflow-x-auto">
-        <table class="min-w-full w-full table-auto">
-            <thead>
-                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                    <th class="py-3 px-6 text-left">Img</th>
-                    <th class="py-3 px-6 text-left">Product Name</th>
-                    <th class="py-3 px-6 text-left">Category</th>
-                    <th class="py-3 px-6 text-right">Price</th>
-                    <th class="py-3 px-6 text-center">Status</th>
-                    <th class="py-3 px-6 text-center">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="text-gray-600 text-sm font-light">
-                @forelse($products as $product)
-                <tr class="border-b border-gray-200 hover:bg-gray-100">
-                    <td class="py-3 px-6 text-left">
-                        @if($product->image)
-                            <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-10 h-10 rounded-full object-cover">
-                        @else
-                            <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-500">N/A</div>
-                        @endif
-                    </td>
-                    <td class="py-3 px-6 text-left whitespace-nowrap">
-                        <span class="font-medium">{{ $product->name }}</span>
-                    </td>
-                    <td class="py-3 px-6 text-left">
-                        {{ $product->category ? $product->category->name : 'Uncategorized' }}
-                    </td>
-                    <td class="py-3 px-6 text-right">
-                        ${{ number_format($product->price, 2) }}
-                    </td>
-                    <td class="py-3 px-6 text-center">
-                        @if($product->is_active)
-                            <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Active</span>
-                        @else
-                            <span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Inactive</span>
-                        @endif
-                    </td>
-                    <td class="py-3 px-6 text-center">
-                        <div class="flex item-center justify-center space-x-4">
-                            <!-- EDIT BUTTON -->
-                            <a href="{{ route('admin.products.edit', $product->id) }}" class="text-blue-500 hover:text-blue-700" title="Edit">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                </svg>
-                            </a>
-                            <!-- DELETE BUTTON -->
-                            <button type="button" onclick="openDeleteModal('{{ route('admin.products.destroy', $product->id) }}')" class="text-red-500 hover:text-red-700" title="Delete">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="6" class="py-3 px-6 text-center text-gray-500">No products found.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-    
-    <!-- FIX: Added method_exists check before calling links() -->
-    @if(method_exists($products, 'links'))
-    <div class="mt-4">
-        {{ $products->links() }}
-    </div>
-    @endif
-</div>
-
-<!-- Delete Modal -->
-<div id="deleteModal" class="hidden fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="closeDeleteModal()"></div>
-        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div class="sm:flex sm:items-start">
-                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                        <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                    </div>
-                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Delete Product</h3>
-                        <div class="mt-2">
-                            <p class="text-sm text-gray-500">Are you sure you want to delete this product? This action cannot be undone.</p>
-                        </div>
-                    </div>
+    <!-- Categories Section (Updated to show database images) -->
+    <div class="mb-8">
+        <h2 class="text-lg font-bold text-gray-800 mb-1">Categories</h2>
+        <p class="text-gray-500 text-sm mb-4">Filter products by category.</p>
+        
+        <div class="flex flex-wrap gap-4">
+            <a href="{{ route('admin.products.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl border {{ !request('category_id') ? 'border-zinc-900 bg-zinc-900 text-white' : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50' }} transition-all shadow-sm">
+                <div class="w-10 h-10 rounded-full {{ !request('category_id') ? 'bg-zinc-800' : 'bg-zinc-100' }} flex items-center justify-center">
+                    <i class="fas fa-th-large {{ !request('category_id') ? 'text-white' : 'text-zinc-500' }}"></i>
                 </div>
-            </div>
-            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <form id="deleteForm" method="POST" action="">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 sm:ml-3 sm:w-auto sm:text-sm">
-                        Yes, Delete
-                    </button>
-                </form>
-                <button type="button" onclick="closeDeleteModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                    Cancel
-                </button>
-            </div>
+                <div>
+                    <p class="font-bold text-sm">All Products</p>
+                    <p class="text-xs {{ !request('category_id') ? 'text-zinc-300' : 'text-zinc-500' }}">{{ $categories->sum('products_count') }} Items</p>
+                </div>
+            </a>
+
+            @foreach($categories as $category)
+            <a href="{{ route('admin.products.index', ['category_id' => $category->id]) }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl border {{ request('category_id') == $category->id ? 'border-zinc-900 bg-zinc-900 text-white' : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50' }} transition-all shadow-sm">
+                <div class="w-10 h-10 rounded-full {{ request('category_id') == $category->id ? 'bg-zinc-800' : 'bg-zinc-100' }} flex items-center justify-center overflow-hidden shrink-0">
+                    <!-- Fix 1: Load category images safely -->
+                    @if(!empty($category->image))
+                        <img src="{{ Str::startsWith($category->image, ['http://', 'https://']) ? $category->image : asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="w-full h-full object-cover">
+                    @else
+                        <i class="fas fa-folder {{ request('category_id') == $category->id ? 'text-white' : 'text-zinc-500' }}"></i>
+                    @endif
+                </div>
+                <div>
+                    <p class="font-bold text-sm">{{ $category->name }}</p>
+                    <p class="text-xs {{ request('category_id') == $category->id ? 'text-zinc-300' : 'text-zinc-500' }}">{{ $category->products_count }} Items</p>
+                </div>
+            </a>
+            @endforeach
         </div>
     </div>
+
+    <!-- Products Section -->
+    <div class="bg-white rounded-2xl shadow-sm border border-zinc-200 overflow-hidden">
+        <div class="p-6 border-b border-zinc-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h2 class="text-lg font-bold text-gray-800">Products</h2>
+                <p class="text-gray-500 text-sm">Manage your inventory.</p>
+            </div>
+            
+            <!-- Search Form -->
+            <form action="{{ route('admin.products.index') }}" method="GET" class="w-full sm:w-auto flex items-center gap-2">
+                @if(request('category_id'))
+                    <input type="hidden" name="category_id" value="{{ request('category_id') }}">
+                @endif
+                <div class="relative w-full sm:w-64">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm"></i>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name or SKU..." class="w-full pl-9 pr-4 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 outline-none transition-all">
+                </div>
+                <button type="submit" class="px-4 py-2 bg-zinc-100 text-zinc-700 rounded-xl text-sm font-semibold hover:bg-zinc-200 transition-colors border border-zinc-200">
+                    Search
+                </button>
+                @if(request('search') || request('category_id'))
+                    <a href="{{ route('admin.products.index') }}" class="px-4 py-2 bg-red-50 text-red-600 rounded-xl text-sm font-semibold hover:bg-red-100 transition-colors border border-red-100">
+                        Clear
+                    </a>
+                @endif
+            </form>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-zinc-50 border-b border-zinc-200">
+                        <th class="p-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Product</th>
+                        <th class="p-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider">SKU</th>
+                        <th class="p-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Category</th>
+                        <th class="p-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Price & Sale</th>
+                        <th class="p-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Stock</th>
+                        <th class="p-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Status</th>
+                        <th class="p-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-100">
+                    @forelse($products as $product)
+                        <tr class="hover:bg-zinc-50/50 transition-colors">
+                            <td class="p-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-xl border border-zinc-200 overflow-hidden bg-zinc-100 shrink-0">
+                                        <!-- Fix 2: Load product images safely from the Storage disk -->
+                                        @if(!empty($product->main_image))
+                                            <img src="{{ Str::startsWith($product->main_image, ['http://', 'https://']) ? $product->main_image : asset('storage/' . $product->main_image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                        @else
+                                            <div class="w-full h-full flex items-center justify-center text-zinc-400">
+                                                <i class="fas fa-image"></i>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-zinc-800 text-sm line-clamp-1">{{ $product->name }}</p>
+                                        <p class="text-xs text-zinc-500 mt-0.5 line-clamp-1">{{ Str::limit(strip_tags($product->description), 40) }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="inline-flex items-center px-2 py-1 rounded-md bg-zinc-100 border border-zinc-200 text-xs font-mono font-medium text-zinc-600">
+                                    {{ $product->sku ?: 'N/A' }}
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                @if($product->category)
+                                    <span class="inline-flex items-center px-2 py-1 rounded-md bg-blue-50 border border-blue-100 text-xs font-semibold text-blue-600">
+                                        {{ $product->category->name }}
+                                    </span>
+                                @else
+                                    <span class="text-zinc-400 text-xs">Uncategorized</span>
+                                @endif
+                            </td>
+                            <td class="p-4">
+                                <div class="flex flex-col">
+                                    <!-- Fix 4: Safely display Sale Price if it exists and is less than regular price -->
+                                    @if(!empty($product->sale_price) && $product->sale_price > 0 && $product->sale_price < $product->price)
+                                        <span class="text-sm font-bold text-red-600">৳ {{ number_format($product->sale_price, 2) }}</span>
+                                        <span class="text-xs text-zinc-400 line-through">৳ {{ number_format($product->price, 2) }}</span>
+                                    @else
+                                        <span class="text-sm font-bold text-zinc-800">৳ {{ number_format($product->price, 2) }}</span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <span class="text-sm font-semibold {{ $product->stock > 10 ? 'text-green-600' : ($product->stock > 0 ? 'text-yellow-600' : 'text-red-600') }}">
+                                    {{ $product->stock ?? 0 }}
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                @php
+                                    // Fallback to check multiple common status definitions
+                                    $isActive = $product->status === 'active' || $product->status === 1 || $product->is_active === 1;
+                                @endphp
+                                @if($isActive)
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-50 border border-green-200 text-xs font-bold text-green-700">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> Active
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-zinc-100 border border-zinc-200 text-xs font-bold text-zinc-600">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-zinc-400"></span> Inactive
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <a href="{{ route('admin.products.edit', $product->id) }}" class="w-8 h-8 rounded-lg bg-white border border-zinc-200 flex items-center justify-center text-zinc-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-colors" title="Edit">
+                                        <i class="fas fa-edit text-xs"></i>
+                                    </a>
+                                    <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?');" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="w-8 h-8 rounded-lg bg-white border border-zinc-200 flex items-center justify-center text-zinc-500 hover:text-red-600 hover:border-red-200 hover:bg-red-50 transition-colors" title="Delete">
+                                            <i class="fas fa-trash-alt text-xs"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="p-8 text-center text-zinc-500">
+                                <div class="w-16 h-16 mx-auto bg-zinc-100 rounded-full flex items-center justify-center mb-3">
+                                    <i class="fas fa-box-open text-2xl text-zinc-400"></i>
+                                </div>
+                                <p class="font-medium text-zinc-800">No products found</p>
+                                <p class="text-sm mt-1">Try adjusting your search or category filter.</p>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination Links -->
+        @if($products->hasPages())
+            <div class="p-4 border-t border-zinc-200 bg-zinc-50">
+                {{ $products->links() }}
+            </div>
+        @endif
+    </div>
 </div>
-
-<script>
-    function openDeleteModal(actionUrl) {
-        document.getElementById('deleteForm').action = actionUrl;
-        document.getElementById('deleteModal').classList.remove('hidden');
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('deleteModal').classList.add('hidden');
-        document.getElementById('deleteForm').action = '';
-    }
-</script>
 @endsection

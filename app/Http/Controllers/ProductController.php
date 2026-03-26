@@ -11,13 +11,35 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+ public function index(\Illuminate\Http\Request $request)
     {
-        // Eager load category to prevent N+1 query issues
-        $products = Product::with('category')->latest()->get(); 
-        return view('admin.products.index', compact('products'));
-    }
+        // 1. Get ALL categories with their product counts (needed for the folder grid)
+        $categories = \App\Models\Category::withCount('products')->get();
 
+        // 2. Prepare the product query
+        $query = \App\Models\Product::with('category')->latest();
+
+        // 3. Filter by Category if clicked on a folder
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // 4. Filter by Search Query (Searches Name or SKU code)
+        if ($request->filled('search')) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', $searchTerm)
+                  ->orWhere('sku', 'LIKE', $searchTerm)
+                  ->orWhere('description', 'LIKE', $searchTerm); 
+            });
+        }
+
+        // 5. Paginate the results
+        $products = $query->paginate(15);
+
+        // 6. Pass BOTH $products and $categories to the view
+        return view('admin.products.index', compact('products', 'categories'));
+    }
     public function create()
     {
         $categories = Category::where('is_active', 1)->get();

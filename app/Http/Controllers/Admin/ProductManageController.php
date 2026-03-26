@@ -3,161 +3,194 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class ProductManageController extends Controller
 {
-    // List all products
-    public function index()
+    /**
+     * Display a listing of the products.
+     */
+        public function index(Request $request)
     {
-        $products = Product::with('category')->latest()->paginate(10);
-        return view('admin.products.index', compact('products'));
+        // 1. Get ALL categories with their product counts 
+        $categories = Category::withCount('products')->get();
+
+        // 2. Prepare the product query
+        $query = Product::with('category')->latest();
+
+        // 3. Filter by Category
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // 4. Filter by Search Query (Case-insensitive fix for small/capital letters)
+        if ($request->filled('search')) {
+            $searchTerm = '%' . strtolower($request->search) . '%';
+            
+            // Using LOWER() makes it universally case-insensitive across all databases
+            $query->where(function ($q) use ($searchTerm) {
+                $q->whereRaw('LOWER(name) LIKE ?', [$searchTerm])
+                  ->orWhereRaw('LOWER(sku) LIKE ?', [$searchTerm])
+                  ->orWhereRaw('LOWER(description) LIKE ?', [$searchTerm]); 
+            });
+        }
+
+        // 5. Paginate the results (withQueryString keeps your search/filters active on page 2, 3, etc)
+        $products = $query->paginate(15)->withQueryString();
+
+        // 6. Pass BOTH $products and $categories to the view
+        return view('admin.products.index', compact('products', 'categories'));
     }
 
-    // Show create form
+    /**
+     * Show the form for creating a new product.
+     */
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::where('is_active', 1)->get();
         return view('admin.products.create', compact('categories'));
     }
 
-    // Store new product
+    /**
+     * Store a newly created product in storage.
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
-            'sku' => 'nullable|string|max:100',
-            'category_id' => 'required',
-            'stock_quantity' => 'nullable|integer|min:0',
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
-            'sale_price' => 'nullable|numeric|min:0',
-            'short_description' => 'nullable|string',
-            'description' => 'nullable|string',
+            'sku' => 'nullable|string|max:100|unique:products,sku',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        $data = $request->except('_token', 'image', 'gallery');
-        $data['slug'] = Str::slug($request->name);
-        $data['is_active'] = $request->has('is_active');
-        $data['is_featured'] = $request->has('is_featured');
+        $data = $request->except(['image', 'gallery', '_token']);
         
+        // Generate a unique slug based on the product name
+        $data['slug'] = Str::slug($request->name) . '-' . uniqid();
+        
+        // Handle Booleans for checkboxes
+        $data['is_active'] = $request->has('is_active') ? 1 : 0;
+        $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
+
         // 1. Handle Main Image Upload
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $data['image'] = '/storage/' . $path;
+            $data['image'] = $request->file('image')->store('products', 'public');
         }
 
-        // 2. Handle Gallery Uploads (Save as JSON array)
+        // 2. Handle Multiple Gallery Images Upload
+        $galleryPaths = [];
         if ($request->hasFile('gallery')) {
-            $galleryPaths = [];
             foreach ($request->file('gallery') as $image) {
-                $path = $image->store('products/gallery', 'public');
-                $galleryPaths[] = '/storage/' . $path;
+                $galleryPaths[] = $image->store('products/gallery', 'public');
             }
-            $data['gallery'] = json_encode($galleryPaths);
         }
+        $data['gallery'] = json_encode($galleryPaths);
 
+        // Save Product
         Product::create($data);
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully!');
     }
 
-    // Show Edit Form
-    public function edit($id)
+    /**
+     * Show the form for editing the specified product.
+     */
+    public function edit(Product $product)
     {
-        $product = Product::findOrFail($id);
-        $categories = Category::all();
+        $categories = Category::where('is_active', 1)->get();
         return view('admin.products.edit', compact('product', 'categories'));
     }
 
-    // Update product
-    public function update(Request $request, $id)
+    /**
+     * Update the specified product in storage.
+     */
+    public function update(Request $request, Product $product)
     {
-        $product = Product::findOrFail($id);
-
         $request->validate([
-            'name' => 'required|max:255',
-            'sku' => 'nullable|string|max:100',
-            'category_id' => 'required',
-            'stock_quantity' => 'nullable|integer|min:0',
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
-            'sale_price' => 'nullable|numeric|min:0',
-            'short_description' => 'nullable|string',
-            'description' => 'nullable|string',
+            'sku' => 'nullable|string|max:100|unique:products,sku,' . $product->id,
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        $data = $request->except('_token', '_method', 'image', 'gallery');
-        $data['slug'] = Str::slug($request->name);
-        $data['is_active'] = $request->has('is_active');
-        $data['is_featured'] = $request->has('is_featured');
+        $data = $request->except(['image', 'gallery', 'existing_gallery', '_token', '_method']);
+        
+        // Handle Booleans for checkboxes (unchecked checkboxes aren't sent in the request)
+        $data['is_active'] = $request->has('is_active') ? 1 : 0;
+        $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
 
-        // Handle Main Image Upload
+        // --- 1. HANDLE MAIN IMAGE ---
         if ($request->hasFile('image')) {
-            if ($product->image && !str_starts_with($product->image, 'http')) {
-                Storage::disk('public')->delete(str_replace('/storage/', '', $product->image));
+            // Delete old image if it exists
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
             }
-            $path = $request->file('image')->store('products', 'public');
-            $data['image'] = '/storage/' . $path;
+            // Store new image
+            $data['image'] = $request->file('image')->store('products', 'public');
         }
 
-        // Handle Gallery Uploads
+        // --- 2. HANDLE GALLERY IMAGES ---
+        
+        // Get the gallery array currently saved in the database
+        $currentGallery = json_decode($product->gallery, true) ?? [];
+        
+        // Get the array of paths the user decided to KEEP from the frontend
+        $keptGallery = $request->input('existing_gallery', []);
+
+        // Find images that exist in DB but were REMOVED by the user
+        $imagesToDelete = array_diff($currentGallery, $keptGallery);
+        
+        // Delete physically discarded images from storage
+        foreach ($imagesToDelete as $imagePath) {
+            Storage::disk('public')->delete($imagePath);
+        }
+
+        // Initialize final gallery array with the kept images
+        $finalGallery = $keptGallery;
+
+        // Upload and Append newly selected gallery images
         if ($request->hasFile('gallery')) {
-            // Delete old gallery images to save space
-            if ($product->gallery) {
-                $oldGallery = json_decode($product->gallery, true);
-                if (is_array($oldGallery)) {
-                    foreach ($oldGallery as $oldImage) {
-                        if (!str_starts_with($oldImage, 'http')) {
-                            Storage::disk('public')->delete(str_replace('/storage/', '', $oldImage));
-                        }
-                    }
-                }
-            }
-
-            $galleryPaths = [];
             foreach ($request->file('gallery') as $image) {
-                $path = $image->store('products/gallery', 'public');
-                $galleryPaths[] = '/storage/' . $path;
+                $finalGallery[] = $image->store('products/gallery', 'public');
             }
-            $data['gallery'] = json_encode($galleryPaths);
         }
 
+        // Save the updated gallery array back to JSON
+        $data['gallery'] = json_encode(array_values($finalGallery));
+
+        // Update Product
         $product->update($data);
 
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully!');
     }
 
-    // Delete product
-    public function destroy($id)
+    /**
+     * Remove the specified product from storage.
+     */
+    public function destroy(Product $product)
     {
-        $product = Product::findOrFail($id);
-        
-        // Delete main image
-        if ($product->image && !str_starts_with($product->image, 'http')) {
-            Storage::disk('public')->delete(str_replace('/storage/', '', $product->image));
-        }
-
-        // Delete gallery files
-        if ($product->gallery) {
-            $gallery = json_decode($product->gallery, true);
-            if (is_array($gallery)) {
-                foreach ($gallery as $imagePath) {
-                    if (!str_starts_with($imagePath, 'http')) {
-                        Storage::disk('public')->delete(str_replace('/storage/', '', $imagePath));
-                    }
-                }
-            }
+        // 1. Delete Main Image
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
         }
         
+        // 2. Delete All Gallery Images
+        $galleryImages = json_decode($product->gallery, true) ?? [];
+        foreach ($galleryImages as $imagePath) {
+            Storage::disk('public')->delete($imagePath);
+        }
+        
+        // 3. Delete the Product
         $product->delete();
-
+        
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully!');
     }
 }

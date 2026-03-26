@@ -1,8 +1,66 @@
 @extends('admin.layouts.admin')
 
 @section('content')
-<!-- IMPORTANT: Removed the parentheses from productImageManager -->
-<div class="max-w-4xl mx-auto" x-data="productImageManager">
+
+<!-- 1. BULLETPROOF SCRIPT AT THE TOP -->
+<!-- This guarantees the functions exist before Alpine even looks at the HTML -->
+<script>
+    window.uploadManager = function() {
+        return {
+            mainPreview: null,
+            galleryFiles: [],     
+            galleryPreviews: [],  
+
+            previewMain(event) {
+                const file = event.target?.files[0];
+                if (file) {
+                    this.mainPreview = URL.createObjectURL(file);
+                }
+            },
+            
+            clearMainImage() {
+                this.mainPreview = null;
+                const input = document.getElementById('mainImageInput');
+                if (input) input.value = ''; 
+            },
+
+            previewGallery(event) {
+                const newFiles = Array.from(event.target?.files || []);
+                if (newFiles.length === 0) return;
+
+                const dataTransfer = new DataTransfer();
+
+                // Keep old files
+                this.galleryFiles.forEach(file => dataTransfer.items.add(file));
+
+                // Add new files
+                newFiles.forEach(file => {
+                    dataTransfer.items.add(file);
+                    this.galleryFiles.push(file);
+                    this.galleryPreviews.push(URL.createObjectURL(file));
+                });
+
+                // Update input
+                const input = document.getElementById('galleryInput');
+                if (input) input.files = dataTransfer.files;
+            },
+            
+            removeGalleryPreview(index) {
+                this.galleryFiles.splice(index, 1);
+                this.galleryPreviews.splice(index, 1);
+
+                const dataTransfer = new DataTransfer();
+                this.galleryFiles.forEach(file => dataTransfer.items.add(file));
+                
+                const input = document.getElementById('galleryInput');
+                if (input) input.files = dataTransfer.files;
+            }
+        };
+    };
+</script>
+
+<!-- 2. USE THE GLOBAL FUNCTION -->
+<div class="max-w-4xl mx-auto" x-data="uploadManager()">
     
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Create Product</h1>
@@ -133,7 +191,9 @@
                                 <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-3 group-hover:text-blue-500 transition-colors"></i>
                                 <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload main image</span></p>
                             </div>
-                            <input type="file" name="image" id="mainImageInput" class="hidden" accept="image/*" @change="previewMain" />
+                            
+                            <!-- 3. EXPLICITLY PASSING $event HERE -->
+                            <input type="file" name="image" id="mainImageInput" class="hidden" accept="image/*" @change="previewMain($event)" />
                         </label>
                     </div>
                 </div>
@@ -147,7 +207,9 @@
                                 <i class="fas fa-images text-xl text-gray-400 mb-1 group-hover:text-blue-500 transition-colors"></i>
                                 <p class="text-sm text-gray-500"><span class="font-semibold">Upload Multiple Images</span></p>
                             </div>
-                            <input type="file" name="gallery[]" id="galleryInput" multiple class="hidden" accept="image/*" @change="previewGallery" />
+                            
+                            <!-- 4. EXPLICITLY PASSING $event HERE -->
+                            <input type="file" name="gallery[]" id="galleryInput" multiple class="hidden" accept="image/*" @change="previewGallery($event)" />
                         </label>
                     </div>
 
@@ -190,57 +252,4 @@
         </div>
     </form>
 </div>
-
-<!-- FIXED ALPINE SCRIPT -->
-<script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('productImageManager', () => ({
-            mainPreview: null,
-            galleryFiles: [],     
-            galleryPreviews: [],  
-
-            // Main Image Logic
-            previewMain(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    this.mainPreview = URL.createObjectURL(file);
-                }
-            },
-            clearMainImage() {
-                this.mainPreview = null;
-                document.getElementById('mainImageInput').value = ''; 
-            },
-
-            // Gallery Logic (Appending & Deleting)
-            previewGallery(event) {
-                const newFiles = Array.from(event.target.files);
-                const dataTransfer = new DataTransfer();
-
-                // 1. Keep the old files
-                this.galleryFiles.forEach(file => dataTransfer.items.add(file));
-
-                // 2. Add the new files
-                newFiles.forEach(file => {
-                    dataTransfer.items.add(file);
-                    this.galleryFiles.push(file);
-                    this.galleryPreviews.push(URL.createObjectURL(file));
-                });
-
-                // 3. Update the hidden HTML input
-                document.getElementById('galleryInput').files = dataTransfer.files;
-            },
-            
-            removeGalleryPreview(index) {
-                // 1. Remove from our arrays
-                this.galleryFiles.splice(index, 1);
-                this.galleryPreviews.splice(index, 1);
-
-                // 2. Rebuild the file input
-                const dataTransfer = new DataTransfer();
-                this.galleryFiles.forEach(file => dataTransfer.items.add(file));
-                document.getElementById('galleryInput').files = dataTransfer.files;
-            }
-        }));
-    });
-</script>
 @endsection

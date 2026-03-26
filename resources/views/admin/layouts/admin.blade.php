@@ -48,9 +48,8 @@
                     <i class="fas fa-box w-5 text-center {{ request()->routeIs('admin.products.*') ? 'text-red-600' : 'text-zinc-400' }}"></i>
                     <span>Products</span>
                 </a>
-                
-                <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900">
-                    <i class="fas fa-tags w-5 text-center text-zinc-400"></i>
+                  <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.categories.*') ? 'bg-red-50 text-red-600 font-semibold shadow-sm ring-1 ring-red-100' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900' }}">
+                    <i class="fas fa-tags w-5 text-center {{ request()->routeIs('admin.categories.*') ? 'text-red-600' : 'text-zinc-400' }}"></i>
                     <span>Categories</span>
                 </a>
 
@@ -58,8 +57,8 @@
                     <p class="px-4 text-[11px] font-bold tracking-widest text-zinc-400 uppercase">Sales</p>
                 </div>
 
-                <a href="{{ route('admin.orders.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900">
-                    <i class="fas fa-shopping-cart w-5 text-center text-zinc-400"></i>
+                <a href="{{ route('admin.orders.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.orders.*') ? 'bg-red-50 text-red-600 font-semibold shadow-sm ring-1 ring-red-100' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900' }}">
+                    <i class="fas fa-shopping-cart w-5 text-center {{ request()->routeIs('admin.orders.*') ? 'text-red-600' : 'text-zinc-400' }}"></i>
                     <span>Orders</span>
                     <span class="ml-auto bg-red-100 text-red-700 py-0.5 px-2.5 rounded-full text-[10px] font-bold">New</span>
                 </a>
