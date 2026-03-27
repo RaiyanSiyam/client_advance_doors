@@ -31,9 +31,10 @@
 
     <!-- Main Header -->
     <header id="mainHeader" class="w-full fixed top-0 z-50 transition-all duration-300 bg-transparent border-transparent">
-      
+       
+
         <!-- Main Navigation Bar -->
-        <div id="navContainer" class="container mx-auto px-4 py-5 transition-all duration-300">
+        <div id="navContainer" class="container mx-auto px-4 py-4 transition-all duration-300">
             <div class="flex items-center justify-between">
                 
                 <!-- Logo -->
@@ -46,12 +47,11 @@
                 <!-- Main Navigation Links (Desktop) -->
                 <nav class="hidden lg:block">
                     <ul class="flex space-x-8 items-center font-medium">
-                        <li><a href="{{ route('home') ?? '/' }}" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Home</a></li>
-                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Doors</a></li>
-                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Living</a></li>
+                        <li><a href="{{ route('home') }}" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Doors</a></li>
+                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Living Room</a></li>
                         <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Bedroom</a></li>
                         <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Dining</a></li>
-                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Office</a></li>
+                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Interior</a></li>    
                     </ul>
                 </nav>
 
@@ -79,7 +79,7 @@
                         <span class="absolute -top-2 -right-2 bg-brand-red text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
                     </button>
 
-                    <!-- Mobile Menu Button (Compact version fix) -->
+                    <!-- Mobile Menu Button -->
                     <button onclick="toggleMobileMenu()" class="lg:hidden nav-icon text-white hover:text-brand-red transition-colors duration-300 focus:outline-none">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
@@ -88,14 +88,13 @@
         </div>
 
         <!-- Mobile Menu Dropdown (Hidden by default) -->
-        <div id="mobileMenu" class="hidden lg:hidden bg-white shadow-lg border-t border-gray-200 absolute w-full left-0 top-full">
-            <div class="px-4 py-2 space-y-1 text-gray-800">
-                <a href="{{ route('home') ?? '/' }}" class="block py-2 text-brand-red font-medium">Home</a>
-                <a href="#" class="block py-2 border-b hover:text-brand-red transition">Doors</a>
-                <a href="#" class="block py-2 border-b hover:text-brand-red transition">Living</a>
-                <a href="#" class="block py-2 border-b hover:text-brand-red transition">Bedroom</a>
-                <a href="#" class="block py-2 border-b hover:text-brand-red transition">Dining</a>
-                <a href="#" class="block py-2 hover:text-brand-red transition">Office</a>
+        <div id="mobileMenu" class="hidden lg:hidden bg-white shadow-2xl border-t-2 border-brand-red absolute w-full left-0 top-full transition-all duration-300">
+            <div class="px-4 py-4 space-y-2 text-gray-800 font-medium">
+                <a href="{{ route('home') ?? '/' }}" class="block px-4 py-3 rounded-lg text-brand-red bg-gray-50 transition-colors duration-300">Doors</a>
+                <a href="#" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Living Room</a>
+                <a href="#" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Bedroom</a>
+                <a href="#" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Dining</a>
+                <a href="#" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Interior</a>
             </div>
         </div>
     </header>
@@ -104,6 +103,13 @@
     <main class="flex-grow">
         @yield('content')
     </main>
+
+    <!-- Floating Chat Widget -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button class="bg-brand-dark text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-brand-red hover:-translate-y-1 hover:scale-105 transition-all duration-300 group focus:outline-none">
+            <i class="fas fa-comment-dots text-2xl group-hover:animate-pulse"></i>
+        </button>
+    </div>
 
     <!-- Cart Drawer Overlays -->
     <div id="cartDrawerOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden opacity-0 pointer-events-none transition-opacity duration-300" onclick="toggleCartDrawer()"></div>
@@ -117,13 +123,86 @@
         </div>
     </div>
 
+    
+
+
+
+   <!-- Footer -->
+    <footer class="bg-brand-dark text-white pt-16 pb-8">
+        <div class="container mx-auto px-4 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center mb-6">
+                    <div class="bg-brand-red text-white font-bold text-lg px-2 py-1 mr-1">ADVANCE</div>
+                    <div class="text-white font-bold text-lg">DOORS</div>
+                </div>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6">Crafting premium doors and furniture with uncompromising quality and timeless elegance.</p>
+            </div>
+            
+            <div>
+                <h4 class="text-lg font-semibold mb-6">Quick Links</h4>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-brand-red transition">About Us</a></li>
+                    <li><a href="#" class="hover:text-brand-red transition">Living Room</a></li>
+                    <li><a href="#" class="hover:text-brand-red transition">Bedroom</a></li>
+                    <li><a href="#" class="hover:text-brand-red transition">Doors</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-semibold mb-6">Customer Service</h4>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-brand-red transition">Contact Us</a></li>
+                    <li><a href="#" class="hover:text-brand-red transition">Shipping Policy</a></li>
+                    <li><a href="#" class="hover:text-brand-red transition">Returns & Exchanges</a></li>
+                    <li><a href="#" class="hover:text-brand-red transition">Track Order</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-semibold mb-6">Contact Info</h4>
+                <div class="space-y-3 text-gray-400">
+                    <p class="text-sm"><i class="fas fa-map-marker-alt mr-2"></i> 123 Furniture Avenue, City, State</p>
+                    <p class="text-sm"><i class="fas fa-phone-alt mr-2"></i> +1 234-567890</p>
+                    <p class="text-sm"><i class="fas fa-envelope mr-2"></i> info@advancedoors.com</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center text-sm text-gray-500 mt-12 border-t border-slate-800 pt-6">
+            &copy; {{ date('Y') }} Advance Doors. All rights reserved.
+        </div>
+    </footer>
+
     <!-- Scripts -->
     <script>
-        // Fix for Mobile Menu
+        let isMobileMenuOpen = false;
+
+        // Toggle Mobile Menu
         function toggleMobileMenu() {
             const mobileMenu = document.getElementById('mobileMenu');
             if(mobileMenu) {
                 mobileMenu.classList.toggle('hidden');
+                // Track state to force white header if open
+                isMobileMenuOpen = !mobileMenu.classList.contains('hidden');
+                
+                // Re-trigger scroll logic to apply color changes immediately
+                window.dispatchEvent(new Event('scroll'));
+            }
+        }
+
+        // Toggle Sub-Dropdown inside Mobile Menu
+        function toggleMobileDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const icon = document.getElementById(dropdownId + 'Icon');
+            
+            if (dropdown.classList.contains('hidden')) {
+                dropdown.classList.remove('hidden');
+                dropdown.classList.add('flex');
+                if(icon) icon.style.transform = 'rotate(180deg)';
+            } else {
+                dropdown.classList.add('hidden');
+                dropdown.classList.remove('flex');
+                if(icon) icon.style.transform = 'rotate(0deg)';
             }
         }
 
@@ -173,7 +252,8 @@
             const navLinks = document.querySelectorAll('.nav-link');
             const navIcons = document.querySelectorAll('.nav-icon');
 
-            if (window.scrollY > 50) {
+            // Apply solid state if scrolled down OR if mobile menu is opened
+            if (window.scrollY > 50 || isMobileMenuOpen) {
                 // Scrolled Down State: White Header
                 header.classList.remove('bg-transparent', 'border-transparent');
                 header.classList.add('bg-white', 'shadow-md', 'border-b', 'border-gray-200');

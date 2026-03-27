@@ -2,22 +2,24 @@
 
 @section('content')
 <!-- Hero Slider Section -->
-<div class="relative w-full h-[85vh] bg-brand-dark overflow-hidden">
+<!-- h-[60vh] for mobile compact view, lg:h-[100vh] for desktop full screen -->
+<div class="relative w-full h-[60vh] lg:h-[100vh] bg-brand-dark overflow-hidden">
     
     <!-- Slide 1 -->
     <div class="slide absolute inset-0 transition-opacity duration-1000 opacity-100 z-10">
-        <!-- Removed opacity-50 so the picture is fully visible -->
         <img src="https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" 
              class="absolute inset-0 w-full h-full object-cover" 
              alt="Premium Interior">
         
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-            <h1 class="text-white text-6xl md:text-[5.5rem] font-bold mb-4 tracking-tight drop-shadow-md">
+            <!-- Adjusted font sizes for mobile (text-4xl) to desktop (lg:text-[5.5rem]) -->
+            <h1 class="text-white text-4xl sm:text-5xl lg:text-[5.5rem] font-bold mb-2 lg:mb-4 tracking-tight drop-shadow-md">
                 Sets you as a trend
             </h1>
-            <div class="flex items-center gap-4">
-                <div class="w-16 h-[1px] bg-white"></div>
-                <p class="text-white text-3xl md:text-5xl font-light tracking-wide drop-shadow-md">
+            <div class="flex items-center gap-3 lg:gap-4">
+                <div class="w-8 lg:w-16 h-[1px] bg-white"></div>
+                <!-- Adjusted paragraph font sizes -->
+                <p class="text-white text-lg sm:text-2xl lg:text-5xl font-light tracking-wide drop-shadow-md">
                     aesthetically stylish setter
                 </p>
             </div>
@@ -31,12 +33,12 @@
              alt="Modern Doors">
         
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-            <h1 class="text-white text-6xl md:text-[5.5rem] font-bold mb-4 tracking-tight drop-shadow-md">
+            <h1 class="text-white text-4xl sm:text-5xl lg:text-[5.5rem] font-bold mb-2 lg:mb-4 tracking-tight drop-shadow-md">
                 Sets you as a trend
             </h1>
-            <div class="flex items-center gap-4">
-                <div class="w-16 h-[1px] bg-white"></div>
-                <p class="text-white text-3xl md:text-5xl font-light tracking-wide drop-shadow-md">
+            <div class="flex items-center gap-3 lg:gap-4">
+                <div class="w-8 lg:w-16 h-[1px] bg-white"></div>
+                <p class="text-white text-lg sm:text-2xl lg:text-5xl font-light tracking-wide drop-shadow-md">
                     aesthetically stylish setter
                 </p>
             </div>
@@ -50,12 +52,12 @@
              alt="Luxury Furniture">
         
         <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-            <h1 class="text-white text-6xl md:text-[5.5rem] font-bold mb-4 tracking-tight drop-shadow-md">
+            <h1 class="text-white text-4xl sm:text-5xl lg:text-[5.5rem] font-bold mb-2 lg:mb-4 tracking-tight drop-shadow-md">
                 Sets you as a trend
             </h1>
-            <div class="flex items-center gap-4">
-                <div class="w-16 h-[1px] bg-white"></div>
-                <p class="text-white text-3xl md:text-5xl font-light tracking-wide drop-shadow-md">
+            <div class="flex items-center gap-3 lg:gap-4">
+                <div class="w-8 lg:w-16 h-[1px] bg-white"></div>
+                <p class="text-white text-lg sm:text-2xl lg:text-5xl font-light tracking-wide drop-shadow-md">
                     aesthetically stylish setter
                 </p>
             </div>
@@ -63,22 +65,10 @@
     </div>
 
     <!-- Slider Pagination Dots -->
-    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
+    <div class="absolute bottom-6 lg:bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
         <button class="slider-dot w-3 h-3 rounded-full bg-white transition"></button>
         <button class="slider-dot w-3 h-3 rounded-full bg-white/40 hover:bg-white transition"></button>
         <button class="slider-dot w-3 h-3 rounded-full bg-white/40 hover:bg-white transition"></button>
-    </div>
-</div>
-
-    <!-- Floating Contact/Chat Buttons -->
-    <div class="absolute bottom-10 left-10 text-white flex flex-col gap-1">
-        <i class="fas fa-phone-alt mb-1 opacity-80"></i>
-        <span class="text-sm font-light">09 678 7777 77</span>
-    </div>
-    <div class="absolute bottom-10 right-10">
-        <button class="bg-brand-red w-14 h-14 rounded-full flex items-center justify-center text-white text-xl shadow-lg hover:bg-red-700 transition">
-            <i class="fas fa-comment"></i>
-        </button>
     </div>
 </div>
 
