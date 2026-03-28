@@ -9,16 +9,23 @@ class Category extends Model
 {
     use HasFactory;
 
-    // Updated to match your exact database columns
     protected $fillable = [
-        'name',
-        'slug',
-        'image',
-        'is_active'
+        'name', 
+        'slug', 
+        'image', 
+        'is_active',
+        'parent_id' // Added to allow mass assignment
     ];
 
-    public function products()
+    // Get the parent category
+    public function parent()
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    // Get the sub-categories (children)
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
     }
 }

@@ -2,8 +2,7 @@
 
 @section('content')
 
-<!-- 1. BULLETPROOF SCRIPT AT THE TOP -->
-<!-- This guarantees the functions exist before Alpine even looks at the HTML -->
+<!-- Bulletproof script for Image Upload Preview -->
 <script>
     window.uploadManager = function() {
         return {
@@ -30,22 +29,19 @@
 
                 const dataTransfer = new DataTransfer();
 
-                // Keep old files
                 this.galleryFiles.forEach(file => dataTransfer.items.add(file));
 
-                // Add new files
                 newFiles.forEach(file => {
                     dataTransfer.items.add(file);
                     this.galleryFiles.push(file);
                     this.galleryPreviews.push(URL.createObjectURL(file));
                 });
 
-                // Update input
                 const input = document.getElementById('galleryInput');
                 if (input) input.files = dataTransfer.files;
             },
-            
-            removeGalleryPreview(index) {
+
+            removeGalleryImage(index) {
                 this.galleryFiles.splice(index, 1);
                 this.galleryPreviews.splice(index, 1);
 
@@ -55,201 +51,202 @@
                 const input = document.getElementById('galleryInput');
                 if (input) input.files = dataTransfer.files;
             }
-        };
-    };
+        }
+    }
 </script>
 
-<!-- 2. USE THE GLOBAL FUNCTION -->
-<div class="max-w-4xl mx-auto" x-data="uploadManager()">
-    
+<div class="max-w-6xl mx-auto">
     <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Create Product</h1>
-        <p class="text-gray-600">Add a new item to your catalog with rich media.</p>
+        <h1 class="text-2xl font-bold text-gray-800">Add New Product</h1>
+        <p class="text-gray-600 text-sm mt-1">Create a new product for your store catalog.</p>
     </div>
 
-    <div class="mb-6">
-        <a href="{{ route('admin.products.index') }}" class="text-zinc-500 hover:text-zinc-900 transition-colors flex items-center gap-2 text-sm font-semibold w-fit px-3 py-1.5 rounded-lg hover:bg-zinc-100 -ml-3">
-            <i class="fas fa-arrow-left text-xs"></i> Back to Catalog
-        </a>
-    </div>
-
-    @if ($errors->any())
-        <div class="mb-6 bg-red-50 border border-red-200 p-4 rounded-xl flex gap-3 shadow-sm">
-            <i class="fas fa-exclamation-circle text-red-500 mt-0.5"></i>
-            <ul class="list-disc list-inside text-sm text-red-700 space-y-1">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <!-- MAIN FORM -->
+    <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" x-data="uploadManager()">
         @csrf
-        
-        <!-- Basic Details -->
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-zinc-100">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Basic Details</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Name -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Product Name *</label>
-                    <input type="text" name="name" value="{{ old('name') }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-shadow">
-                </div>
 
-                <!-- Product Code (SKU) -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Product Code (SKU)</label>
-                    <input type="text" name="sku" value="{{ old('sku') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-shadow" placeholder="e.g., AD-DOOR-01">
-                </div>
-
-                <!-- Category -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
-                    <select name="category_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
-                        <option value="">Select Category</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                {{ $category->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <!-- Stock Quantity -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
-                    <input type="number" name="stock_quantity" value="{{ old('stock_quantity', 0) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-shadow">
-                </div>
-
-                <!-- Price -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Price *</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-gray-500 font-medium">৳</span>
-                        </div>
-                        <input type="number" step="0.01" name="price" value="{{ old('price') }}" required class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
-                    </div>
-                </div>
-
-                <!-- Sale Price -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Sale Price (Optional)</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-gray-500 font-medium">৳</span>
-                        </div>
-                        <input type="number" step="0.01" name="sale_price" value="{{ old('sale_price') }}" class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Descriptions -->
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-zinc-100">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Descriptions</h2>
-            <div class="space-y-6">
-                <!-- Short Description -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
-                    <textarea name="short_description" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">{{ old('short_description') }}</textarea>
-                    <p class="text-xs text-gray-500 mt-1">A brief summary that appears on product cards.</p>
-                </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Main Details -->
+            <div class="lg:col-span-2 space-y-6">
                 
-                <!-- Full Description -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Description</label>
-                    <textarea name="description" rows="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">{{ old('description') }}</textarea>
-                    <p class="text-xs text-gray-500 mt-1">Detailed product information, specifications, materials, etc.</p>
+                <!-- General Info Box -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">General Information</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Product Name <span class="text-red-500">*</span></label>
+                            <input type="text" name="name" value="{{ old('name') }}" required class="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all" placeholder="e.g. Premium Solid Wood Door">
+                            @error('name') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                        </div>
+
+                        <!-- DYNAMIC CATEGORY DROPDOWNS -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                            
+                            <!-- Hidden input that actually submits to the database -->
+                            <input type="hidden" name="category_id" id="final_category_id" value="{{ old('category_id') }}" required>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Main Category <span class="text-red-500">*</span></label>
+                                <select id="parent_category_select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none bg-white">
+                                    <option value="">-- Select Main Category --</option>
+                                    <!-- Only show categories that have NO parent -->
+                                    @foreach($categories->whereNull('parent_id') as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Sub Category</label>
+                                <select id="sub_category_select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none bg-white disabled:bg-gray-100 disabled:text-gray-400" disabled>
+                                    <option value="">-- Select Sub Category --</option>
+                                </select>
+                                <p class="text-xs text-gray-500 mt-1">Optional. Requires Main Category.</p>
+                            </div>
+                        </div>
+                        @error('category_id') <span class="text-red-500 text-xs mt-1">Please select a valid category.</span> @enderror
+                    </div>
+                </div>
+
+                <!-- Pricing & Inventory Box -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">Pricing & Inventory</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Price ($) <span class="text-red-500">*</span></label>
+                            <input type="number" step="0.01" name="price" value="{{ old('price') }}" required class="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-red-500 outline-none transition-all" placeholder="0.00">
+                            @error('price') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Compare Price ($)</label>
+                            <input type="number" step="0.01" name="old_price" value="{{ old('old_price') }}" class="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-red-500 outline-none transition-all" placeholder="0.00">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Stock Quantity</label>
+                            <input type="number" name="stock_quantity" value="{{ old('stock_quantity', 10) }}" required class="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-red-500 outline-none transition-all">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Full Description Box -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">Detailed Description</h2>
+                    <div>
+                        <textarea name="description" rows="6" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-red-500 outline-none transition-all">{{ old('description') }}</textarea>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Media Uploads -->
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-zinc-100">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Media</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Main Image Upload -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Main Image</label>
-                    <div class="flex items-center justify-center w-full">
-                        <label class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors overflow-hidden relative group">
-                            
-                            <template x-if="mainPreview">
-                                <div class="absolute inset-0 w-full h-full bg-white">
-                                    <img :src="mainPreview" class="w-full h-full object-contain p-2">
-                                    <button type="button" @click.prevent="clearMainImage()" class="absolute top-2 right-2 bg-white/90 hover:bg-red-500 hover:text-white text-red-500 rounded-full w-8 h-8 flex items-center justify-center transition-all shadow-md">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
-                            </template>
+            <!-- Right Column: Images & Status -->
+            <div class="space-y-6">
+                <!-- Status Box -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">Visibility Status</h2>
+                    <div class="space-y-4">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="is_active" value="1" class="sr-only peer" checked>
+                            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                            <span class="ms-3 text-sm font-medium text-gray-700">Active (Visible in Store)</span>
+                        </label>
 
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6" x-show="!mainPreview">
-                                <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-3 group-hover:text-blue-500 transition-colors"></i>
-                                <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload main image</span></p>
-                            </div>
-                            
-                            <!-- 3. EXPLICITLY PASSING $event HERE -->
-                            <input type="file" name="image" id="mainImageInput" class="hidden" accept="image/*" @change="previewMain($event)" />
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="is_featured" value="1" class="sr-only peer">
+                            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-500"></div>
+                            <span class="ms-3 text-sm font-medium text-gray-700">Featured Product</span>
                         </label>
                     </div>
                 </div>
 
-                <!-- Gallery Upload -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Gallery Images</label>
-                    <div class="flex items-center justify-center w-full mb-3">
-                        <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors group">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <i class="fas fa-images text-xl text-gray-400 mb-1 group-hover:text-blue-500 transition-colors"></i>
-                                <p class="text-sm text-gray-500"><span class="font-semibold">Upload Multiple Images</span></p>
+                <!-- Main Image Upload -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">Main Product Image</h2>
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center hover:bg-gray-50 transition-colors relative cursor-pointer" onclick="document.getElementById('mainImageInput').click()">
+                        <template x-if="!mainPreview">
+                            <div class="py-6">
+                                <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                                <p class="text-sm text-gray-600 font-medium">Click to upload image</p>
+                                <p class="text-xs text-gray-400 mt-1">PNG, JPG, WEBP up to 2MB</p>
                             </div>
-                            
-                            <!-- 4. EXPLICITLY PASSING $event HERE -->
-                            <input type="file" name="gallery[]" id="galleryInput" multiple class="hidden" accept="image/*" @change="previewGallery($event)" />
-                        </label>
-                    </div>
-
-                    <!-- Gallery Previews Grid -->
-                    <div class="grid grid-cols-4 gap-2" x-show="galleryPreviews.length > 0">
-                        <template x-for="(preview, index) in galleryPreviews" :key="index">
-                            <div class="aspect-square rounded-lg border border-gray-200 overflow-hidden relative group bg-white shadow-sm">
-                                <img :src="preview" class="w-full h-full object-contain p-1">
-                                <button type="button" @click.prevent="removeGalleryPreview(index)" class="absolute top-1 right-1 bg-white hover:bg-red-500 hover:text-white text-red-500 rounded-full w-6 h-6 flex items-center justify-center transition-all shadow-md opacity-0 group-hover:opacity-100">
-                                    <i class="fas fa-times text-xs"></i>
+                        </template>
+                        <template x-if="mainPreview">
+                            <div class="relative">
+                                <img :src="mainPreview" class="max-h-48 mx-auto rounded-lg shadow-sm object-contain">
+                                <button type="button" @click.stop="clearMainImage" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 shadow-md">
+                                    <i class="fas fa-times text-sm"></i>
                                 </button>
                             </div>
                         </template>
                     </div>
+                    <input type="file" name="image" id="mainImageInput" class="hidden" accept="image/*" @change="previewMain">
+                    @error('image') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
                 </div>
             </div>
         </div>
 
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-zinc-100">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Status & Toggles</h2>
-            <div class="flex gap-6">
-                <label class="inline-flex items-center cursor-pointer">
-                    <input type="checkbox" name="is_active" class="sr-only peer" checked>
-                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
-                    <span class="ms-3 text-sm font-medium text-gray-700">Active</span>
-                </label>
-
-                <label class="inline-flex items-center cursor-pointer">
-                    <input type="checkbox" name="is_featured" class="sr-only peer">
-                    <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
-                    <span class="ms-3 text-sm font-medium text-gray-700">Featured</span>
-                </label>
-            </div>
-        </div>
-
-        <div class="flex justify-end pt-4">
-            <button type="submit" class="bg-red-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-700 shadow-lg shadow-red-600/30 transition-all active:scale-95 flex items-center gap-2 text-sm">
-                <i class="fas fa-check"></i> Save Product
+        <!-- Sticky Footer for Save Button -->
+        <div class="flex justify-end gap-3 sticky bottom-6 bg-white/90 backdrop-blur-md p-4 mt-8 rounded-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)] border border-gray-100 z-20">
+            <a href="{{ route('admin.products.index') }}" class="px-6 py-2.5 rounded-xl font-semibold text-gray-600 hover:bg-gray-100 transition-colors text-sm flex items-center">Cancel</a>
+            <button type="submit" class="px-8 py-2.5 bg-gray-900 text-white rounded-xl font-bold hover:bg-black shadow-lg shadow-gray-900/20 transition-all flex items-center gap-2">
+                <i class="fas fa-save text-sm"></i> Create Product
             </button>
         </div>
     </form>
 </div>
+
+<!-- Category Dropdown Logic -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const allCategories = @json($categories ?? []);
+        const parentSelect = document.getElementById('parent_category_select');
+        const subSelect = document.getElementById('sub_category_select');
+        const finalCategoryId = document.getElementById('final_category_id');
+
+        // Function to update the hidden input that gets sent to Laravel
+        function updateFinalCategory() {
+            if (subSelect.value) {
+                finalCategoryId.value = subSelect.value;
+            } else if (parentSelect.value) {
+                finalCategoryId.value = parentSelect.value;
+            } else {
+                finalCategoryId.value = '';
+            }
+        }
+
+        // When the Main Category changes
+        parentSelect.addEventListener('change', function() {
+            const parentId = this.value;
+            
+            // Clear current subcategories
+            subSelect.innerHTML = '<option value="">-- Select Sub Category --</option>';
+            subSelect.value = '';
+            
+            if (parentId) {
+                // Find subcategories belonging to this parent
+                const subs = allCategories.filter(c => c.parent_id == parentId);
+                
+                if (subs.length > 0) {
+                    subSelect.disabled = false;
+                    subs.forEach(sub => {
+                        const opt = document.createElement('option');
+                        opt.value = sub.id;
+                        opt.textContent = sub.name;
+                        subSelect.appendChild(opt);
+                    });
+                } else {
+                    // No subcategories exist for this parent
+                    subSelect.disabled = true;
+                }
+            } else {
+                subSelect.disabled = true;
+            }
+            
+            updateFinalCategory();
+        });
+
+        // When Sub Category changes
+        subSelect.addEventListener('change', updateFinalCategory);
+    });
+</script>
 @endsection

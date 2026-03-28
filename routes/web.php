@@ -8,6 +8,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\FrontCategoryController;
 
 // Admin Panel Controllers
 use App\Http\Controllers\Admin\AuthController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\Admin\OrderController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
+Route::get('/category/{slug}', [FrontCategoryController::class, 'show'])->name('category.show');
 
 // Cart Routes
 Route::get('/cart', [CartController::class, 'index'])->name('cart');

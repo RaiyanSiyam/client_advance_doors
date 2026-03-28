@@ -47,9 +47,9 @@
                 <!-- Main Navigation Links (Desktop) -->
                 <nav class="hidden lg:block">
                     <ul class="flex space-x-8 items-center font-medium">
-                        <li><a href="{{ route('home') }}" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Doors</a></li>
+                        <li><a href="{{ route('category.show', 'doors') }}" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Doors</a></li>
                         <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Living Room</a></li>
-                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Bedroom</a></li>
+                        <li><a href="{{ route('category.show', 'bedroom') }}"" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Bedroom</a></li>
                         <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Dining</a></li>
                         <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Interior</a></li>    
                     </ul>
@@ -90,9 +90,9 @@
         <!-- Mobile Menu Dropdown (Hidden by default) -->
         <div id="mobileMenu" class="hidden lg:hidden bg-white shadow-2xl border-t-2 border-brand-red absolute w-full left-0 top-full transition-all duration-300">
             <div class="px-4 py-4 space-y-2 text-gray-800 font-medium">
-                <a href="{{ route('home') ?? '/' }}" class="block px-4 py-3 rounded-lg text-brand-red bg-gray-50 transition-colors duration-300">Doors</a>
+                <a href="{{ route('category.show', 'doors') }}" class="block px-4 py-3 rounded-lg text-brand-red bg-gray-50 transition-colors duration-300">Doors</a>
                 <a href="#" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Living Room</a>
-                <a href="#" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Bedroom</a>
+                <a href="{{ route('category.show', 'bedroom') }}" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Bedroom</a>
                 <a href="#" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Dining</a>
                 <a href="#" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Interior</a>
             </div>
