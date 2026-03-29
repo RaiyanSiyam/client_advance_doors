@@ -9,29 +9,28 @@ class Product extends Model
 {
     use HasFactory;
 
-    // Notice short_description is completely removed
     protected $fillable = [
         'category_id',
         'name',
         'slug',
+        'sku',
         'description',
         'price',
-        'old_price',
+        'sale_price',
         'stock_quantity',
         'image',
+        'gallery',
+        'is_featured',
         'is_active',
-        'is_featured'
     ];
 
-    // This ensures data types are automatically handled
+    // Automatically cast the gallery JSON column to a PHP array
     protected $casts = [
-        'is_active' => 'boolean',
+        'gallery' => 'array',
         'is_featured' => 'boolean',
-        'price' => 'decimal:2',
-        'old_price' => 'decimal:2',
+        'is_active' => 'boolean',
     ];
 
-    // Relationship to Category
     public function category()
     {
         return $this->belongsTo(Category::class);

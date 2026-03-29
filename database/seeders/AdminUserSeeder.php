@@ -20,3 +20,5 @@ class AdminUserSeeder extends Seeder
         );
     }
 }
+
+//php artisan db:seed --class=AdminUserSeeder
