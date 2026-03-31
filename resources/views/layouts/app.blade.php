@@ -106,9 +106,9 @@
 
     <!-- Floating Chat Widget -->
     <div class="fixed bottom-6 right-6 z-50">
-        <button class="bg-brand-dark text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-brand-red hover:-translate-y-1 hover:scale-105 transition-all duration-300 group focus:outline-none">
+        <a href="#" class="bg-brand-dark text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-brand-red hover:-translate-y-1 hover:scale-105 transition-all duration-300 group focus:outline-none">
             <i class="fas fa-comment-dots text-2xl group-hover:animate-pulse"></i>
-        </button>
+        </a>
     </div>
 
     <!-- Cart Drawer Overlays -->
