@@ -241,79 +241,56 @@
             }
         }
 
-        // Shrink header on scroll (Premium effect + Blending with Picture)
-        window.addEventListener('scroll', function() {
-            const header = document.getElementById('mainHeader');
-            const topBar = document.getElementById('topBar');
-            const navContainer = document.getElementById('navContainer');
-            const logoText = document.getElementById('logoText');
-            const searchInput = document.getElementById('searchInput');
-            const searchIcon = document.getElementById('searchIcon');
-            const navLinks = document.querySelectorAll('.nav-link');
-            const navIcons = document.querySelectorAll('.nav-icon');
+        const mainHeader = document.getElementById('mainHeader');
+        const navContainer = document.getElementById('navContainer');
+        const logoText = document.getElementById('logoText');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const navIcons = document.querySelectorAll('.nav-icon');
+        const searchInput = document.getElementById('searchInput');
+        const searchIcon = document.getElementById('searchIcon');
 
-            // Apply solid state if scrolled down OR if mobile menu is opened
-            if (window.scrollY > 50 || isMobileMenuOpen) {
-                // Scrolled Down State: White Header
-                header.classList.remove('bg-transparent', 'border-transparent');
-                header.classList.add('bg-white', 'shadow-md', 'border-b', 'border-gray-200');
+        // Check if the current page is the homepage
+        const isHomePage = {{ request()->is('/') ? 'true' : 'false' }};
 
-                // Collapse top bar
-                if(topBar) {
-                    topBar.style.maxHeight = '0px';
-                    topBar.style.opacity = '0';
-                    topBar.style.padding = '0';
-                }
+        function updateHeaderStyles() {
+         // If we scrolled down OR if we are NOT on the homepage, make it solid white
+            if (window.scrollY > 50 || !isHomePage) {
+            
+                mainHeader.classList.add('bg-white', 'border-gray-200', 'shadow-md');
+                mainHeader.classList.remove('bg-transparent', 'border-transparent');
                 
-                // Make navbar slightly thinner
-                if(navContainer) {
-                    navContainer.classList.remove('py-4');
-                    navContainer.classList.add('py-2');
-                }
-
-                // Change text from White to Dark
+                navContainer.classList.add('py-2');
+                navContainer.classList.remove('py-4');
+                
                 if(logoText) {
-                    logoText.classList.remove('text-white');
                     logoText.classList.add('text-brand-dark');
+                    logoText.classList.remove('text-white');
                 }
                 navLinks.forEach(link => {
-                    link.classList.remove('text-white');
                     link.classList.add('text-gray-800');
+                    link.classList.remove('text-white');
                 });
                 navIcons.forEach(icon => {
-                    icon.classList.remove('text-white');
                     icon.classList.add('text-gray-800');
+                    icon.classList.remove('text-white');
                 });
-
-                // Update Search Input Colors
+                
                 if(searchInput) {
-                    searchInput.classList.remove('bg-white/20', 'text-white', 'placeholder-gray-200', 'border-transparent');
                     searchInput.classList.add('bg-gray-100', 'text-gray-800', 'placeholder-gray-500', 'border-gray-300');
+                    searchInput.classList.remove('bg-white/20', 'text-white', 'placeholder-gray-200', 'border-transparent');
                 }
                 if(searchIcon) {
-                    searchIcon.classList.remove('text-white');
                     searchIcon.classList.add('text-gray-600');
+                    searchIcon.classList.remove('text-white');
                 }
-
             } else {
-                // Top State: Transparent Header
-                header.classList.add('bg-transparent', 'border-transparent');
-                header.classList.remove('bg-white', 'shadow-md', 'border-b', 'border-gray-200');
-
-                // Expand top bar
-                if(topBar) {
-                    topBar.style.maxHeight = '50px';
-                    topBar.style.opacity = '1';
-                    topBar.style.padding = '0.5rem 0';
-                }
-
-                // Restore navbar thickness
-                if(navContainer) {
-                    navContainer.classList.add('py-4');
-                    navContainer.classList.remove('py-2');
-                }
-
-                // Change text back to White
+                // Only make it transparent if we are ON the homepage and at the VERY TOP
+                mainHeader.classList.add('bg-transparent', 'border-transparent');
+                mainHeader.classList.remove('bg-white', 'border-gray-200', 'shadow-md');
+                
+                navContainer.classList.add('py-4');
+                navContainer.classList.remove('py-2');
+                
                 if(logoText) {
                     logoText.classList.add('text-white');
                     logoText.classList.remove('text-brand-dark');
@@ -326,8 +303,7 @@
                     icon.classList.add('text-white');
                     icon.classList.remove('text-gray-800');
                 });
-
-                // Revert Search Input Colors
+                
                 if(searchInput) {
                     searchInput.classList.add('bg-white/20', 'text-white', 'placeholder-gray-200', 'border-transparent');
                     searchInput.classList.remove('bg-gray-100', 'text-gray-800', 'placeholder-gray-500', 'border-gray-300');
@@ -337,12 +313,10 @@
                     searchIcon.classList.remove('text-gray-600');
                 }
             }
-        });
+        }
 
-        // Trigger scroll immediately on load to apply proper styles if the page is reloaded halfway down
-        document.addEventListener('DOMContentLoaded', () => {
-            window.dispatchEvent(new Event('scroll'));
-        });
+        window.addEventListener('scroll', updateHeaderStyles);
+        document.addEventListener('DOMContentLoaded', updateHeaderStyles);
     </script>
 </body>
 </html>
