@@ -1,65 +1,32 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
- public function index(\Illuminate\Http\Request $request)
+    public function show($slug)
     {
-        // 1. Get ALL categories with their product counts (needed for the folder grid)
-        $categories = \App\Models\Category::withCount('products')->get();
+        // 1. Fetch the product by slug. 
+        // We eager load 'category' and 'category.parent' so the breadcrumbs work perfectly!
+        $product = Product::with(['category', 'category.parent'])
+                          ->where('slug', $slug)
+                          ->where('is_active', 1)
+                          ->firstOrFail();
 
-        // 2. Prepare the product query
-        $query = \App\Models\Product::with('category')->latest();
+        // 2. Fetch Related Products
+        // Eager load 'category' to prevent N+1 queries in the related products grid
+        $relatedProducts = Product::with('category')
+                                  ->where('category_id', $product->category_id)
+                                  ->where('id', '!=', $product->id)
+                                  ->where('is_active', 1)
+                                  ->inRandomOrder() // Mixes them up so it looks fresh
+                                  ->take(4)         // Limits it to 4 products (1 row)
+                                  ->get();
 
-        // 3. Filter by Category if clicked on a folder
-        if ($request->filled('category_id')) {
-            $query->where('category_id', $request->category_id);
-        }
-
-        // 4. Filter by Search Query (Searches Name or SKU code)
-        if ($request->filled('search')) {
-            $searchTerm = '%' . $request->search . '%';
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('name', 'LIKE', $searchTerm)
-                  ->orWhere('sku', 'LIKE', $searchTerm)
-                  ->orWhere('description', 'LIKE', $searchTerm); 
-            });
-        }
-
-        // 5. Paginate the results
-        $products = $query->paginate(15);
-
-        // 6. Pass BOTH $products and $categories to the view
-        return view('admin.products.index', compact('products', 'categories'));
-    }
-    public function create()
-    {
-        $categories = Category::where('is_active', 1)->get();
-        return view('admin.products.create', compact('categories'));
-    }
-
-    public function store(Request $request)
-    {
-        // ... (Keep existing store logic from previous response)
-    }
-
-    // Add this destroy method to handle deletions!
-    public function destroy(Product $product)
-    {
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
-        }
-        
-        $product->delete();
-        
-        return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully!');
+        // 3. Return the new product_card view!
+        return view('pages.product_card', compact('product', 'relatedProducts'));
     }
 }

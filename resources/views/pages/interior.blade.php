@@ -65,7 +65,7 @@
         
         <!-- Gallery Item 1 -->
         <div class="group relative overflow-hidden rounded-lg shadow-sm aspect-square sm:aspect-[4/5]">
-            <img src="https://www.interioracebd.com/images/jobs/56699-luxury-modern-living-room-design.jpg" alt="Interior Work 1" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Interior Work 1" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-2 sm:p-4">
                 <p class="text-white font-medium text-[10px] sm:text-sm leading-tight">Modern Living Room Setup</p>
             </div>
@@ -73,7 +73,7 @@
 
         <!-- Gallery Item 2 -->
         <div class="group relative overflow-hidden rounded-lg shadow-sm aspect-square sm:aspect-[4/5]">
-            <img src="https://www.bengalinteriors.com/wp-content/uploads/2024/12/Drawing-Room-Interior-Design-in-BD.jpg" alt="Interior Work 2" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+            <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Interior Work 2" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-2 sm:p-4">
                 <p class="text-white font-medium text-[10px] sm:text-sm leading-tight">Custom Door Installation</p>
             </div>
@@ -97,7 +97,7 @@
 
         <!-- Gallery Item 5 (Spans 2 columns, adjusted aspect ratio for mobile) -->
         <div class="group relative overflow-hidden rounded-lg shadow-sm aspect-[2/1] sm:aspect-[4/5] col-span-2 lg:col-span-2">
-            <img src="https://www.bengalinteriors.com/wp-content/uploads/2022/02/best-interior-design-company-in-bangladesh.jpg" alt="Interior Work 5" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Interior Work 5" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-2 sm:p-4">
                 <p class="text-white font-medium text-[11px] sm:text-base leading-tight">Complete Home Renovation Project</p>
             </div>
