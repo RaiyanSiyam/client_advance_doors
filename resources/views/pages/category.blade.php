@@ -8,23 +8,17 @@
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 
-<!-- DYNAMIC HEADER LOGIC -->
 @if(isset($subcategories) && $subcategories->count() > 0)
-    <!-- Gorgeous Split-Layout Hero for Top Categories (Doors, Bedroom, etc) -->
-    <!-- Removed dark background, removed negative margin, reduced padding for smaller banner -->
     <div class="pt-20 pb-6 lg:pt-20 lg:pb-10 overflow-hidden bg-transparent border-b border-gray-100">
         <div class="container mx-auto px-4 max-w-7xl">
             <div class="flex flex-col md:flex-row items-center gap-6 lg:gap-12">
                 
-                <!-- Text Content -->
                 <div class="w-full md:w-1/2 flex flex-col items-start z-10">
-                    <!-- Multi-level Breadcrumb -->
                     <nav class="text-xs sm:text-sm mb-3 sm:mb-6" aria-label="Breadcrumb">
                         <ol class="list-none p-0 inline-flex items-center space-x-2 text-gray-500">
                             <li><a href="{{ route('home') ?? '/' }}" class="hover:text-brand-red transition">Home</a></li>
                             <li><i class="fas fa-chevron-right text-[8px] sm:text-[10px] text-gray-400 mx-1"></i></li>
                             
-                            <!-- If it has a parent category, show it -->
                             @if($category->parent)
                                 <li><a href="{{ route('category.show', $category->parent->slug) }}" class="hover:text-brand-red transition">{{ $category->parent->name }}</a></li>
                                 <li><i class="fas fa-chevron-right text-[8px] sm:text-[10px] text-gray-400 mx-1"></i></li>
@@ -34,18 +28,15 @@
                         </ol>
                     </nav>
                     
-                    <!-- Changed to dark text -->
                     <h1 class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-brand-dark mb-3 sm:mb-4">
                         {{ $category->name }}
                     </h1>
                     
-                    <!-- Unified Meaningful Description with dark text -->
                     <p class="text-[13px] sm:text-base text-gray-600 leading-relaxed border-l-2 sm:border-l-4 border-brand-red pl-3 sm:pl-4">
                         {{ $category->description ?? 'Discover our carefully curated collection of ' . strtolower($category->name) . '. Each piece is designed to seamlessly blend modern aesthetics with timeless durability, transforming your house into a home.' }}
                     </p>
                 </div>
 
-                <!-- Meaningful Boxed Image -->
                 <div class="w-full md:w-1/2">
                     @php
                         // Assign a meaningful default image based on the category if no DB image exists
@@ -60,9 +51,9 @@
                             $heroImg = 'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
                         }
 
-                        // Override Priority 1: Use the first subcategory image if available
-                        if (isset($subcategories) && $subcategories->count() > 0 && $subcategories->first()->image) {
-                            $heroImg = asset('storage/' . $subcategories->first()->image);
+                        // Override Priority 1: Use the parent category image if available
+                        if ($category->parent && $category->parent->image) {
+                            $heroImg = asset('storage/' . $category->parent->image);
                         }
                         // Override Priority 2: Fallback to the current category image
                         elseif ($category->image) {
@@ -70,7 +61,6 @@
                         }
                     @endphp
                     
-                    <!-- Aspect ratio much shorter on mobile (21/9) to save space -->
                     <div class="rounded-xl overflow-hidden shadow-md aspect-[21/9] sm:aspect-[16/9] md:aspect-[4/3] lg:aspect-[16/9] relative group">
                         <img src="{{ $heroImg }}" alt="{{ $category->name }}" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-gray-900/10 to-transparent pointer-events-none"></div>
@@ -81,17 +71,13 @@
         </div>
     </div>
 @else
-    <!-- Clean, Compact Text-Only Header for Leaf Categories -->
-    <!-- Removed bg-gray-50, removed negative margin, reduced padding -->
     <div class="bg-transparent pt-28 pb-4 sm:pb-6 border-b border-gray-200">
         <div class="container mx-auto px-4 max-w-7xl">
-            <!-- Multi-level Breadcrumb -->
             <nav class="text-xs sm:text-sm mb-2 sm:mb-4" aria-label="Breadcrumb">
                 <ol class="list-none p-0 inline-flex items-center space-x-2 text-gray-500">
                     <li><a href="{{ route('home') ?? '/' }}" class="hover:text-brand-red transition">Home</a></li>
                     <li><i class="fas fa-chevron-right text-[8px] sm:text-[10px] text-gray-400 mx-1"></i></li>
                     
-                    <!-- If it has a parent category, show it -->
                     @if($category->parent)
                         <li><a href="{{ route('category.show', $category->parent->slug) }}" class="hover:text-brand-red transition">{{ $category->parent->name }}</a></li>
                         <li><i class="fas fa-chevron-right text-[8px] sm:text-[10px] text-gray-400 mx-1"></i></li>
@@ -105,7 +91,6 @@
                 {{ $category->name }}
             </h1>
             
-            <!-- Unified Meaningful Description -->
             <p class="mt-2 max-w-2xl text-[13px] sm:text-base text-gray-500 leading-relaxed">
                 {{ $category->description ?? 'Explore our premium selection of ' . strtolower($category->name) . ', specifically crafted for those who appreciate fine details and unparalleled quality.' }}
             </p>
@@ -114,10 +99,8 @@
 @endif
 
 
-<!-- Main Shop Content -->
 <div class="container mx-auto px-4 py-8 sm:py-12 max-w-7xl">
     
-    <!-- Toolbar (Sorting & Results Count) -->
     @if(isset($products) && $products->count() > 0)
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-10 pb-4 border-b border-gray-100 gap-3 sm:gap-4">
             <p class="text-gray-500 text-xs sm:text-sm">
@@ -140,15 +123,12 @@
         </div>
     @endif
 
-    <!-- Products & Categories Grid -->
     @if(isset($subcategories) && $subcategories->count() > 0)
         
-        <!-- Show Subcategories (Strictly 2 on mobile) -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
             @foreach($subcategories as $subcat)
                 <div class="group relative bg-white transition-all duration-300 hover:-translate-y-1 block">
                     <a href="{{ route('category.show', $subcat->slug) }}">
-                        <!-- Image Wrapper (Compact) -->
                         <div class="bg-gray-100 aspect-square sm:aspect-[4/5] overflow-hidden relative mb-2 sm:mb-4 rounded-lg shadow-sm">
                             <img src="{{ $subcat->image ? asset('storage/' . $subcat->image) : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' }}" 
                                  class="w-full h-full object-cover transition duration-700 group-hover:scale-110" 
@@ -156,7 +136,6 @@
                             <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10"></div>
                         </div>
                         
-                        <!-- Subcategory Details -->
                         <div class="px-1 text-center">
                             <h3 class="text-sm sm:text-lg font-bold text-gray-900 mb-1 group-hover:text-brand-red transition line-clamp-1">
                                 {{ $subcat->name }}
@@ -169,31 +148,24 @@
 
     @elseif(isset($products))
         
-        <!-- Show Products (Strictly 2 on mobile, smaller cards, swipeable images) -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
             @forelse($products as $product)
-                <!-- Product Card -->
                 <div class="group relative bg-white transition-all duration-300 hover:-translate-y-1">
                     
-                    <!-- Image Wrapper (Scrollable/Swipeable) -->
                     <div class="bg-gray-100 aspect-square sm:aspect-[4/5] overflow-hidden relative mb-2 sm:mb-4 rounded-lg shadow-sm group/gallery">
                         
-                        <!-- Sale Badge -->
                         @if($product->sale_price)
                             <span class="absolute top-2 left-2 sm:top-3 sm:left-3 bg-red-500 text-white text-[8px] sm:text-[10px] uppercase font-bold px-1.5 sm:px-2.5 py-0.5 sm:py-1 z-20 rounded tracking-wider shadow-sm">Sale</span>
                         @endif
 
-                        <!-- Swipeable Gallery Container -->
                         <div class="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar w-full h-full scroll-smooth">
                             
-                            <!-- Main Product Image -->
                             <div class="w-full h-full flex-shrink-0 snap-center relative">
                                 <img src="{{ $product->image ? asset('storage/' . $product->image) : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' }}" 
                                      class="w-full h-full object-cover" 
                                      alt="{{ $product->name }}">
                             </div>
 
-                            <!-- Additional Gallery Images -->
                             @if(is_array($product->gallery) && count($product->gallery) > 0)
                                 @foreach($product->gallery as $galImg)
                                     <div class="w-full h-full flex-shrink-0 snap-center relative">
@@ -205,10 +177,8 @@
                             @endif
                         </div>
                         
-                        <!-- Hover Action Overlay -->
                         <div class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10"></div>
                         
-                        <!-- Swipe Hint Dots (Only if there's a gallery) -->
                         @if(is_array($product->gallery) && count($product->gallery) > 0)
                             <div class="absolute bottom-1.5 sm:bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-10 pointer-events-none">
                                 <div class="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-white/90 shadow"></div>
@@ -216,7 +186,6 @@
                             </div>
                         @endif
 
-                        <!-- Add to Cart Button (Slides up on hover - desktop only to save space on mobile) -->
                         <div class="hidden sm:flex absolute inset-x-0 bottom-4 justify-center opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-20 px-4">
                             <form action="{{ route('cart.add', $product->id) }}" method="POST" class="w-full m-0">
                                 @csrf
@@ -227,21 +196,17 @@
                         </div>
                     </div>
 
-                    <!-- Product Details (Compact for Mobile) -->
                     <div class="px-1 sm:px-2">
-                        <!-- Category Name -->
                         <p class="text-[9px] sm:text-xs text-gray-400 mb-0.5 sm:mb-1.5 uppercase tracking-wider font-medium line-clamp-1">
                             {{ $category->name }}
                         </p>
                         
-                        <!-- Title -->
                         <h3 class="text-xs sm:text-base font-semibold text-gray-900 mb-0.5 sm:mb-1 line-clamp-2 sm:line-clamp-1 h-[32px] sm:h-auto">
                             <a href="{{ route('product.show', $product->slug) }}" class="hover:text-brand-red transition">
                                 {{ $product->name }}
                             </a>
                         </h3>
                         
-                        <!-- Price & Mobile Add to Cart -->
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mt-1 sm:mt-0">
                             <div class="flex items-center gap-1.5 sm:gap-2">
                                 @if($product->sale_price)
@@ -252,7 +217,6 @@
                                 @endif
                             </div>
 
-                            <!-- Mobile Quick Add Icon -->
                             <form action="{{ route('cart.add', $product->id) }}" method="POST" class="sm:hidden w-full mt-1">
                                 @csrf
                                 <button type="submit" class="w-full bg-brand-dark text-white py-1.5 rounded-md text-[10px] font-medium hover:bg-brand-red transition flex justify-center items-center">
@@ -271,7 +235,6 @@
             @endforelse
         </div>
 
-        <!-- Pagination -->
         <div class="mt-10 sm:mt-16 flex justify-center">
             @if(method_exists($products, 'links'))
                 {{ $products->links() }}

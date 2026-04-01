@@ -10,6 +10,13 @@ class FrontCategoryController extends Controller
 {
     public function show($slug)
     {
+        // 1. Intercept the 'interior' category and load the custom static page
+        if ($slug === 'interior' || $slug === 'interior-doors') { 
+            // Note: Adjust the string above to exactly match your interior category slug!
+            return view('pages.interior');
+        }
+
+        // 2. Normal Category Logic (Everything else stays exactly the same)
         // Eager load children AND parent to check for subcategories and build breadcrumbs
         $category = Category::with(['children', 'parent'])->where('slug', $slug)->firstOrFail();
 

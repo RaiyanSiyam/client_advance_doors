@@ -48,10 +48,10 @@
                 <nav class="hidden lg:block">
                     <ul class="flex space-x-8 items-center font-medium">
                         <li><a href="{{ route('category.show', 'doors') }}" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Doors</a></li>
-                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Living Room</a></li>
-                        <li><a href="{{ route('category.show', 'bedroom') }}"" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Bedroom</a></li>
-                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Dining</a></li>
-                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Interior</a></li>    
+                        <li><a href="{{ route('category.show', 'living-room') }}" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Living Room</a></li>
+                        <li><a href="{{ route('category.show', 'bedroom') }}" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Bedroom</a></li>
+                        <li><a href="{{ route('category.show', 'dining') }}" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Dining</a></li>
+                        <li><a href="{{ route('category.show', 'interior') }}" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Interior</a></li>    
                     </ul>
                 </nav>
 
