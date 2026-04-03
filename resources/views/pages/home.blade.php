@@ -76,7 +76,7 @@
 <div class="container mx-auto px-4 lg:px-8 py-20">
     <div class="flex flex-col lg:flex-row gap-8">
         <!-- Text Column -->
-        <div class="w-full lg:w-1/3 flex flex-col justify-center lg:pr-12 text-left mb-10 lg:mb-0">
+        <div class="w-full lg:w-1/3 sm:w-1/2 flex flex-col justify-center lg:pr-12 text-left mb-10 lg:mb-0">
             <h2 class="text-5xl font-bold text-brand-dark mb-6 leading-tight">Creations with<br>purpose</h2>
             <p class="text-2xl text-gray-500 font-light mb-8">Many choices based on your space</p>
             <a href="{{ route('shop') }}" class="inline-block text-xl text-brand-dark font-medium border-b border-brand-dark pb-1 w-max hover:text-brand-red hover:border-brand-red transition">Explore Now</a>
@@ -207,7 +207,7 @@
             
             @forelse($featuredProducts ?? [] as $product)
                 <!-- Dynamic Product Card -->
-                <div class="min-w-[280px] md:min-w-[320px] snap-start group relative bg-white shadow-sm rounded-lg p-3 transition-shadow hover:shadow-xl">
+                <div class="flex-none w-[160px] sm:w-[220px] lg:w-[260px] snap-start group relative bg-white transition-all duration-300 hover:-translate-y-1">
                     <div class="bg-gray-100 aspect-[4/5] overflow-hidden relative mb-4 rounded-md">
                         
                         <!-- Optional Badge (e.g. if the product has a discount) -->
@@ -244,7 +244,7 @@
                         
                         <!-- Price -->
                         <div class="flex items-center gap-2 mt-2">
-                            <p class="text-zinc-900 font-bold">${{ number_format($product->price ?? 0, 2) }}</p>
+                            <p class="text-zinc-900 font-bold">৳{{ number_format($product->price ?? 0, 2) }}</p>
                             @if(isset($product->old_price) && $product->old_price > $product->price)
                                 <p class="text-gray-400 line-through text-sm">${{ number_format($product->old_price, 2) }}</p>
                             @endif
@@ -261,6 +261,41 @@
     </div>
 </div>
 
+<!-- AUTHORIZED DEALERS SECTION -->
+<div class="bg-gray-50 border-y border-gray-100 py-10 sm:py-14">
+    <div class="container mx-auto px-4 max-w-7xl">
+        <!-- Sleek, spaced-out typography -->
+        <p class="text-center text-[14px] lg:text-lg sm:text-xs text-black-100 uppercase tracking-[0.3em] font-bold mb-8 sm:mb-10">
+            Proud Official Dealers For
+        </p>
+        
+        <!-- Forced flex-row on all screens and adjusted the gap for mobile -->
+        <div class="flex flex-row justify-center items-center gap-6 sm:gap-24 lg:gap-32">
+            
+            <!-- Company 1 -->
+            <div class="group flex flex-col items-center">
+                <a href="{{ route('category.show', 'akij-plastics') }}">
+                    <img src="{{ asset('pics/akij.png') }}" 
+                         alt="Akij Plastics" 
+                         class="w-28 sm:w-40 lg:w-48 h-auto object-contain grayscale opacity-50 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 cursor-pointer">
+                </a>
+            </div>
+
+            <!-- Sleek Divider Line (Now visible on all screens) -->
+            <div class="block w-px h-10 sm:h-16 bg-gray-300"></div>
+            
+            <!-- Company 2 -->
+            <div class="group flex flex-col items-center">
+                <a href="{{ route('category.show', 'national-polymer') }}">
+                    <img src="{{ asset('pics/npoly.png') }}" 
+                         alt="National Polymer" 
+                         class="w-28 sm:w-40 lg:w-48 h-auto object-contain grayscale opacity-50 transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 cursor-pointer">
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const slides = document.querySelectorAll('.slide');
@@ -323,7 +358,7 @@
         const slideRightBtn = document.getElementById('slideRightBtn');
 
         // Scroll amount corresponds to card width + gap (approx 344px)
-        const scrollAmount = 344; 
+        const scrollAmount = 292; 
 
         if (slideLeftBtn && productSlider) {
             slideLeftBtn.addEventListener('click', () => {

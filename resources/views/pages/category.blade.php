@@ -62,7 +62,7 @@
                     @endphp
                     
                     <div class="rounded-xl overflow-hidden shadow-md aspect-[21/9] sm:aspect-[16/9] md:aspect-[4/3] lg:aspect-[16/9] relative group">
-                        <img src="{{ $heroImg }}" alt="{{ $category->name }}" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+                        <img src="{{ $heroImg }}" alt="{{ $category->name }}" w-full h-full object-cover object-center transition duration-700 group-hover:scale-105">
                         <div class="absolute inset-0 bg-gradient-to-t from-gray-900/10 to-transparent pointer-events-none"></div>
                     </div>
                 </div>

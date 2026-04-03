@@ -91,10 +91,10 @@
         <div id="mobileMenu" class="hidden lg:hidden bg-white shadow-2xl border-t-2 border-brand-red absolute w-full left-0 top-full transition-all duration-300">
             <div class="px-4 py-4 space-y-2 text-gray-800 font-medium">
                 <a href="{{ route('category.show', 'doors') }}" class="block px-4 py-3 rounded-lg text-brand-red bg-gray-50 transition-colors duration-300">Doors</a>
-                <a href="#" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Living Room</a>
+                <a href="{{ route('category.show', 'living-room') }}" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Living Room</a>
                 <a href="{{ route('category.show', 'bedroom') }}" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Bedroom</a>
-                <a href="#" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Dining</a>
-                <a href="#" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Interior</a>
+                <a href="{{ route('category.show', 'dining') }}" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Dining</a>
+                <a href="{{ route('category.show', 'interior') }}" class="block px-4 py-3 rounded-lg hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Interior</a>
             </div>
         </div>
     </header>
@@ -161,8 +161,8 @@
             <div>
                 <h4 class="text-lg font-semibold mb-6">Contact Info</h4>
                 <div class="space-y-3 text-gray-400">
-                    <p class="text-sm"><i class="fas fa-map-marker-alt mr-2"></i> 123 Furniture Avenue, City, State</p>
-                    <p class="text-sm"><i class="fas fa-phone-alt mr-2"></i> +1 234-567890</p>
+                    <p class="text-sm"><i class="fas fa-map-marker-alt mr-2"></i>Monipur, Mirpur, Dhaka-1216</p>
+                    <p class="text-sm"><i class="fas fa-phone-alt mr-2"></i>+880 1924-458445</p>
                     <p class="text-sm"><i class="fas fa-envelope mr-2"></i> info@advancedoors.com</p>
                 </div>
             </div>

@@ -124,10 +124,10 @@
                             <td class="p-4 align-middle">
                                 <div class="flex flex-col">
                                     @if($product->sale_price)
-                                        <span class="text-sm font-bold text-zinc-900">${{ number_format($product->sale_price, 2) }}</span>
-                                        <span class="text-xs text-zinc-400 line-through">${{ number_format($product->price, 2) }}</span>
+                                        <span class="text-sm font-bold text-zinc-900">৳{{ number_format($product->sale_price, 2) }}</span>
+                                        <span class="text-xs text-zinc-400 line-through">৳{{ number_format($product->price, 2) }}</span>
                                     @else
-                                        <span class="text-sm font-bold text-zinc-900">${{ number_format($product->price, 2) }}</span>
+                                        <span class="text-sm font-bold text-zinc-900">৳{{ number_format($product->price, 2) }}</span>
                                     @endif
                                 </div>
                             </td>
