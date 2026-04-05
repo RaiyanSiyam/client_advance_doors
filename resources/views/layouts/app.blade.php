@@ -82,31 +82,38 @@
                         <i class="fas fa-search text-xl"></i>
                     </button>
 
-                    <!-- AUTH ICON MAGIC -->
-                    @auth
+                     @auth
                         <div class="relative group">
-                            <button class="nav-icon text-white hover:text-brand-red transition-colors duration-300 focus:outline-none flex items-center">
+                            <button class="nav-icon hover:text-brand-red transition-colors duration-300 focus:outline-none flex items-center py-2 {{ $isHome ? 'text-white' : 'text-gray-800' }}">
                                 <i class="far fa-user text-xl"></i>
                             </button>
                             
-                            <!-- Sleek Dropdown Menu -->
-                            <div class="absolute right-0 mt-4 w-48 bg-white shadow-xl border-t-2 border-brand-red text-gray-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 rounded-b-lg overflow-hidden">
-                                <a href="{{ route('profile') }}" class="block px-4 py-3 hover:bg-gray-50 hover:text-brand-red transition-colors text-sm font-medium border-b border-gray-100">
-                                    <i class="far fa-user w-5 text-center mr-1"></i> My Profile
-                                </a>
-                                <form action="{{ route('customer.logout') }}" method="POST" class="m-0">
-                                    @csrf
-                                    <button type="submit" class="w-full text-left px-4 py-3 hover:bg-gray-50 hover:text-red-600 transition-colors text-sm font-medium text-gray-600">
-                                        <i class="fas fa-sign-out-alt w-5 text-center mr-1"></i> Logout
-                                    </button>
-                                </form>
+                            <!-- Sleek Dropdown Menu Wrapper (Centered perfectly below the icon) -->
+                            <div class="absolute left-1/2 transform -translate-x-1/2 top-full pt-1 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                                <div class="bg-white shadow-xl border-t-2 border-brand-red text-gray-800 rounded-b-lg overflow-hidden">
+                                    <a href="{{ route('profile') }}" class="block px-4 py-3 hover:bg-gray-50 hover:text-brand-red transition-colors text-sm font-medium border-b border-gray-100">
+                                        <i class="far fa-user w-5 text-center mr-1"></i> My Profile
+                                    </a>
+                                    <form action="{{ route('customer.logout') }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button type="submit" class="w-full text-left px-4 py-3 hover:bg-gray-50 hover:text-red-600 transition-colors text-sm font-medium text-gray-600">
+                                            <i class="fas fa-sign-out-alt w-5 text-center mr-1"></i> Logout
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     @else
-                        <button onclick="toggleAuthModal()" class="nav-icon hover:text-brand-red transition-colors duration-300 relative group {{ $isHome ? 'text-white' : 'text-gray-800' }}">
-                            <i class="far fa-user text-xl"></i>
-                            <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none">Login / Sign Up</span>
-                        </button>
+                        <div class="relative group">
+                            <button onclick="toggleAuthModal()" class="nav-icon hover:text-brand-red transition-colors duration-300 focus:outline-none flex items-center py-2 {{ $isHome ? 'text-white' : 'text-gray-800' }}">
+                                <i class="far fa-user text-xl"></i>
+                            </button>
+                            
+                            <!-- Tooltip perfectly centered below the icon -->
+                            <div class="absolute top-full left-1/2 transform -translate-x-1/2 pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                                <span class="bg-gray-900 text-white text-[10px] py-1 px-2 rounded whitespace-nowrap block shadow-md">Login / Sign Up</span>
+                            </div>
+                        </div>
                     @endauth
                     
                     <button onclick="toggleCartDrawer()" class="nav-icon hover:text-brand-red transition-colors duration-300 relative {{ $isHome ? 'text-white' : 'text-gray-800' }}">
@@ -141,7 +148,7 @@
     </main>
 
     <!-- FLOATING AUTH MODAL -->
-    <div id="authModalOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
+     <div id="authModalOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
         <div id="authModal" class="bg-white rounded-2xl shadow-2xl w-full max-w-md transform scale-95 opacity-0 transition-all duration-300 overflow-hidden relative">
             
             <button onclick="toggleAuthModal()" class="absolute right-4 top-4 text-gray-400 hover:text-red-500 z-10 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
@@ -183,24 +190,30 @@
                     <div>
                         <label class="block text-[10px] font-bold text-gray-700 uppercase tracking-widest mb-1">Full Name</label>
                         <input type="text" name="name" value="{{ old('name') }}" required class="w-full px-3 py-2 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-red outline-none text-sm">
+                        @error('name')<span class="text-[10px] text-red-500 mt-0.5 block">{{ $message }}</span>@enderror
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-gray-700 uppercase tracking-widest mb-1">Email</label>
                         <input type="email" name="email" value="{{ old('email') }}" required class="w-full px-3 py-2 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-red outline-none text-sm">
+                        @error('email')<span class="text-[10px] text-red-500 mt-0.5 block">{{ $message }}</span>@enderror
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-gray-700 uppercase tracking-widest mb-1">Phone</label>
                         <input type="text" name="phone" value="{{ old('phone') }}" required class="w-full px-3 py-2 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-red outline-none text-sm">
+                        @error('phone')<span class="text-[10px] text-red-500 mt-0.5 block">{{ $message }}</span>@enderror
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-[10px] font-bold text-gray-700 uppercase tracking-widest mb-1">Password</label>
-                            <input type="password" name="password" required class="w-full px-3 py-2 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-red outline-none text-sm">
+                    <div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-700 uppercase tracking-widest mb-1">Password</label>
+                                <input type="password" name="password" required class="w-full px-3 py-2 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-red outline-none text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-700 uppercase tracking-widest mb-1">Confirm</label>
+                                <input type="password" name="password_confirmation" required class="w-full px-3 py-2 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-red outline-none text-sm">
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-gray-700 uppercase tracking-widest mb-1">Confirm</label>
-                            <input type="password" name="password_confirmation" required class="w-full px-3 py-2 sm:py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-red outline-none text-sm">
-                        </div>
+                        @error('password')<span class="text-[10px] text-red-500 mt-0.5 block">{{ $message }}</span>@enderror
                     </div>
                     <button type="submit" class="w-full bg-brand-red text-white font-bold py-2.5 rounded-lg hover:bg-red-800 transition-colors shadow-md mt-4 text-sm">Create Account</button>
                 </form>
@@ -489,7 +502,7 @@
             }
         }
 
-        // --- AUTH MODAL LOGIC ---
+         // --- AUTH MODAL LOGIC ---
         function toggleAuthModal() {
             const overlay = document.getElementById('authModalOverlay');
             const modal = document.getElementById('authModal');
@@ -533,10 +546,12 @@
             }
         }
 
+        // BUG FIX: Intelligently decide which tab to open if validation fails!
         @if($errors->any())
             document.addEventListener('DOMContentLoaded', () => {
                 toggleAuthModal();
-                @if($errors->has('login_error') || (old('email') && !$errors->has('name')))
+                // If it's a specific login error, or if they definitely didn't submit a name/phone during registration...
+                @if($errors->has('login_error') || (empty(old('name')) && !$errors->has('name') && !$errors->has('phone')))
                     switchAuthTab('login');
                 @else
                     switchAuthTab('register');
