@@ -19,12 +19,7 @@ class CustomerAuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             
-            // Send admins to the backend, regular users stay on the page
-            if (Auth::user()->isAdmin()) {
-                return redirect()->route('admin.dashboard');
-            }
-            
-            // Stay on the same page instead of redirecting to profile!
+            // FIX: Removed the admin redirect. Everyone stays on the exact same page!
             return back()->with('success', 'Welcome back!');
         }
 
@@ -53,7 +48,7 @@ class CustomerAuthController extends Controller
 
         Auth::login($user);
 
-        // Stay on the same page instead of redirecting to profile!
+        // Stay on the same page instead of redirecting
         return back()->with('success', 'Account created successfully! Welcome to Advance Doors.');
     }
 

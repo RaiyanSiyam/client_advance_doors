@@ -32,8 +32,12 @@
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen font-sans">
 
+    @php
+        $isHome = request()->routeIs('home') || request()->is('/');
+    @endphp
+
     <!-- Main Header -->
-    <header id="mainHeader" class="w-full fixed top-0 z-40 transition-all duration-300 bg-transparent border-transparent">
+    <header id="mainHeader"  class="w-full fixed top-0 z-40 transition-all duration-300 {{ $isHome ? 'bg-transparent border-transparent' : 'bg-white shadow-md border-b border-gray-200' }}">
     
         <!-- Main Navigation Bar -->
         <div id="navContainer" class="container mx-auto px-4 py-4 transition-all duration-300">
@@ -41,7 +45,7 @@
                 
                 <!-- Logo -->
                 <a href="{{ route('home') ?? '/' }}" class="flex-shrink-0">
-                    <div class="text-2xl font-bold tracking-tighter">
+                    <div class="text-2xl font-bold tracking-tightertransition-colors duration-300 {{ $isHome ? 'text-white' : 'text-brand-dark' }}">
                         <span id="logoText" class="text-white transition-colors duration-300">ADVANCE</span><span class="text-brand-red">DOORS</span>
                     </div>
                 </a>
@@ -49,18 +53,11 @@
                 <!-- Main Navigation Links (Desktop) -->
                 <nav class="hidden lg:block">
                     <ul class="flex space-x-8 items-center font-medium">
-                        <li><a href="{{ route('home') ?? '/' }}" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Home</a></li>
-                        <li class="relative group">
-                            <a href="#" class="nav-link text-white flex items-center hover:text-brand-red transition-colors duration-300">
-                                Doors <i class="fas fa-chevron-down ml-1 text-[10px]"></i>
-                            </a>
-                            <div class="absolute left-0 mt-2 w-48 bg-white shadow-lg py-2 hidden group-hover:block border-t-2 border-brand-red text-gray-800">
-                                <a href="#" class="block px-4 py-2 hover:bg-gray-50 hover:text-brand-red transition">Solid Wood</a>
-                                <a href="#" class="block px-4 py-2 hover:bg-gray-50 hover:text-brand-red transition">Engineered</a>
-                            </div>
-                        </li>
-                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Living</a></li>
-                        <li><a href="#" class="nav-link text-white hover:text-brand-red transition-colors duration-300">Bedroom</a></li>
+                        <li><a href="{{ route("category.show", "doors") }}" class="nav-link {{ $isHome ? 'text-white' : 'text-gray-800' }} hover:text-brand-red transition-colors duration-300">Doors</a></li>
+                        <li><a href="{{ route("category.show", "living-room") }}" class="nav-link {{ $isHome ? 'text-white' : 'text-gray-800' }} hover:text-brand-red transition-colors duration-300">Living Room</a></li>
+                        <li><a href="{{ route("category.show", "bedroom") }}" class="nav-link {{ $isHome ? 'text-white' : 'text-gray-800' }} hover:text-brand-red transition-colors duration-300">Bedroom</a></li>
+                        <li><a href="{{ route("category.show", "dining") }}" class="nav-link {{ $isHome ? 'text-white' : 'text-gray-800' }} hover:text-brand-red transition-colors duration-300">Dining</a></li>
+                        <li><a href="{{ route("category.show", "interior") }}" class="nav-link {{ $isHome ? 'text-white' : 'text-gray-800' }} hover:text-brand-red transition-colors duration-300">Interior</a></li>
                     </ul>
                 </nav>
 
@@ -70,7 +67,7 @@
                     <!-- Search Form (Desktop) -->
                     <form action="{{ url('product') }}" method="GET" class="hidden md:block relative m-0">
                         <input type="text" name="search" id="desktopSearchInput" placeholder="Search products..." autocomplete="off" class="w-48 pl-4 pr-10 py-1.5 rounded-full border border-transparent focus:ring-2 focus:ring-brand-red bg-white/20 text-white placeholder-gray-200 outline-none backdrop-blur-sm transition-all duration-300 text-sm">
-                        <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white hover:text-brand-red transition-colors duration-300" id="searchIcon">
+                        <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 hover:text-brand-red transition-colors duration-300 {{ $isHome ? 'text-white' : 'text-gray-600' }}" id="searchIcon" id="searchIcon">
                             <i class="fas fa-search"></i>
                         </button>
                         
@@ -81,7 +78,7 @@
                     </form>
                     
                     <!-- Mobile Search Icon Toggle -->
-                    <button onclick="toggleMobileSearch()" class="md:hidden nav-icon text-white hover:text-brand-red transition-colors duration-300 focus:outline-none">
+                    <button onclick="toggleMobileSearch()" class="md:hidden nav-icon hover:text-brand-red transition-colors duration-300 focus:outline-none {{ $isHome ? 'text-white' : 'text-gray-800' }}">
                         <i class="fas fa-search text-xl"></i>
                     </button>
 
@@ -106,18 +103,18 @@
                             </div>
                         </div>
                     @else
-                        <button onclick="toggleAuthModal()" class="nav-icon text-white hover:text-brand-red transition-colors duration-300 relative group">
+                        <button onclick="toggleAuthModal()" class="nav-icon hover:text-brand-red transition-colors duration-300 relative group {{ $isHome ? 'text-white' : 'text-gray-800' }}">
                             <i class="far fa-user text-xl"></i>
                             <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none">Login / Sign Up</span>
                         </button>
                     @endauth
                     
-                    <button onclick="toggleCartDrawer()" class="nav-icon text-white hover:text-brand-red transition-colors duration-300 relative">
+                    <button onclick="toggleCartDrawer()" class="nav-icon hover:text-brand-red transition-colors duration-300 relative {{ $isHome ? 'text-white' : 'text-gray-800' }}">
                         <i class="fas fa-shopping-cart text-xl"></i>
                         <span class="absolute -top-2 -right-2 bg-brand-red text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
                     </button>
 
-                    <button onclick="toggleMobileMenu()" class="lg:hidden nav-icon text-white hover:text-brand-red transition-colors duration-300 focus:outline-none">
+                    <button onclick="toggleMobileMenu()" class="lg:hidden nav-icon hover:text-brand-red transition-colors duration-300 focus:outline-none {{ $isHome ? 'text-white' : 'text-gray-800' }}">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
@@ -143,7 +140,7 @@
         @yield('content')
     </main>
 
-    <!-- FLOATING AUTH MODAL (Ultra Compact for Mobile) -->
+    <!-- FLOATING AUTH MODAL -->
     <div id="authModalOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
         <div id="authModal" class="bg-white rounded-2xl shadow-2xl w-full max-w-md transform scale-95 opacity-0 transition-all duration-300 overflow-hidden relative">
             
@@ -211,7 +208,7 @@
         </div>
     </div>
 
-    <!-- Mobile Menu Side Drawer & Overlays (Opening from the right) -->
+    <!-- Mobile Menu Side Drawer -->
     <div id="mobileMenuOverlay" class="fixed inset-0 bg-black/50 z-[60] hidden opacity-0 pointer-events-none transition-opacity duration-300" onclick="toggleMobileMenu()"></div>
     <div id="mobileMenuDrawer" class="fixed right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-xl z-[70] transform translate-x-full transition-transform duration-300 flex flex-col">
         <div class="p-4 flex justify-between items-center border-b border-gray-100 shrink-0">
@@ -219,43 +216,13 @@
             <button onclick="toggleMobileMenu()" class="text-gray-400 hover:text-red-500 text-xl focus:outline-none w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"><i class="fas fa-times"></i></button>
         </div>
         <div class="p-4 overflow-y-auto flex-1 space-y-1 text-gray-800 font-medium hide-scrollbar">
-            <a href="{{ route('home') ?? '/' }}" class="block px-4 py-3.5 rounded-xl hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Home</a>
-            
-            <!-- Mobile Doors Dropdown Item -->
-            <div class="block rounded-xl overflow-hidden">
-                <button onclick="toggleMobileDropdown('doorsMobileDropdown')" class="w-full flex justify-between items-center text-left px-4 py-3.5 hover:bg-gray-50 hover:text-brand-red transition-colors duration-300 focus:outline-none">
-                    <span>Doors</span>
-                    <i class="fas fa-chevron-down text-[10px] transition-transform duration-300" id="doorsMobileDropdownIcon"></i>
-                </button>
-                <!-- Sub-menu -->
-                <div id="doorsMobileDropdown" class="hidden flex-col bg-gray-50/50 px-4 py-2 space-y-1 text-sm text-gray-600 border-l-2 border-brand-red ml-2 mb-2 mt-1 rounded-r-md">
-                    <a href="#" class="block px-4 py-2.5 rounded-lg hover:text-brand-red hover:bg-white shadow-sm transition-all duration-300">Solid Wood</a>
-                    <a href="#" class="block px-4 py-2.5 rounded-lg hover:text-brand-red hover:bg-white shadow-sm transition-all duration-300">Engineered</a>
-                </div>
-            </div>
+            <a href="{{ route("category.show", "doors") }}" class="block px-4 py-3.5 rounded-xl hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Doors</a>
+            <a href="{{ route("category.show", "living-room") }}" class="block px-4 py-3.5 rounded-xl hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Living Room</a>
+            <a href="{{ route("category.show", "dining") }}" class="block px-4 py-3.5 rounded-xl hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Dining</a>
+            <a href="{{ route("category.show", "bedroom") }}" class="block px-4 py-3.5 rounded-xl hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Bedroom</a>
+            <a href="{{ route("category.show", "interior") }}" class="block px-4 py-3.5 rounded-xl hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Interior</a>    
 
-            <a href="#" class="block px-4 py-3.5 rounded-xl hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Living</a>
-            <a href="#" class="block px-4 py-3.5 rounded-xl hover:bg-gray-50 hover:text-brand-red transition-colors duration-300">Bedroom</a>
-
-            <div class="my-4 border-t border-gray-100"></div>
-
-            @auth
-                <a href="{{ route('profile') }}" class="flex items-center px-4 py-3.5 rounded-xl text-brand-red bg-red-50 hover:bg-red-100 transition-colors duration-300"><i class="far fa-user w-5 text-center mr-3"></i> My Profile</a>
-                <form action="{{ route('customer.logout') }}" method="POST" class="m-0 mt-2">
-                    @csrf
-                    <button type="submit" class="w-full flex items-center text-left px-4 py-3.5 rounded-xl hover:bg-gray-50 text-gray-500 hover:text-red-600 transition-colors duration-300"><i class="fas fa-sign-out-alt w-5 text-center mr-3"></i> Logout</button>
-                </form>
-            @else
-                <button onclick="toggleMobileMenu(); toggleAuthModal();" class="w-full flex items-center text-left px-4 py-3.5 rounded-xl text-brand-red bg-red-50 hover:bg-red-100 transition-colors duration-300"><i class="far fa-user w-5 text-center mr-3"></i> Login / Sign Up</button>
-            @endauth
         </div>
-    </div>
-
-     <!-- Floating Chat Widget -->
-    <div class="fixed bottom-6 right-6 z-50">
-        <a href="#" class="bg-brand-dark text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-brand-red hover:-translate-y-1 hover:scale-105 transition-all duration-300 group focus:outline-none">
-            <i class="fas fa-comment-dots text-2xl group-hover:animate-pulse"></i>
-        </a>
     </div>
 
     <!-- Cart Drawer Overlays -->
@@ -270,11 +237,7 @@
         </div>
     </div>
 
-    
-
-
-
-   <!-- Footer -->
+    <!-- Footer -->
     <footer class="bg-brand-dark text-white pt-16 pb-8">
         <div class="container mx-auto px-4 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
@@ -322,6 +285,9 @@
 
     <!-- Scripts -->
     <script>
+        // Use PHP to pass the route check variable to JS
+        const isHomePage = {{ $isHome ? 'true' : 'false' }};
+
         // --- 1. Toggle Mobile Side Drawer (Now sliding from Right) ---
         let isMobileMenuOpen = false;
 
@@ -474,20 +440,29 @@
             const topBar = document.getElementById('topBar');
             const navContainer = document.getElementById('navContainer');
             const logoText = document.getElementById('logoText');
-            const searchInput = document.getElementById('desktopSearchInput'); // specific ID
+            const searchInput = document.getElementById('desktopSearchInput');
             const searchIcon = document.getElementById('searchIcon');
             const navLinks = document.querySelectorAll('.nav-link');
             const navIcons = document.querySelectorAll('.nav-icon');
 
-            // Become solid white if scrolled, hovered, or menu is open!
-            if (window.scrollY > 50 || isHeaderHovered || isMobileMenuOpen) {
+            const isScrolledOrHovered = (window.scrollY > 50 || isHeaderHovered || isMobileMenuOpen);
+
+            // 1. Handle Top Bar & Padding (Shrinks/Hides on scroll or open menu regardless of page)
+            if (isScrolledOrHovered) {
+                if(topBar) { topBar.style.maxHeight = '0px'; topBar.style.opacity = '0'; topBar.style.padding = '0'; }
+                if(navContainer) { navContainer.classList.remove('py-4'); navContainer.classList.add('py-2'); }
+            } else {
+                if(topBar) { topBar.style.maxHeight = '50px'; topBar.style.opacity = '1'; topBar.style.padding = '0.5rem 0'; }
+                if(navContainer) { navContainer.classList.add('py-4'); navContainer.classList.remove('py-2'); }
+            }
+
+            // 2. Handle Colors & Backgrounds (Always Solid if NOT on homepage!)
+            if (!isHomePage || isScrolledOrHovered) {
+                // Apply Solid White State
                 header.classList.remove('bg-transparent', 'border-transparent');
                 header.classList.add('bg-white', 'shadow-md', 'border-b', 'border-gray-200');
                 
-                if(topBar) { topBar.style.maxHeight = '0px'; topBar.style.opacity = '0'; topBar.style.padding = '0'; }
-                if(navContainer) { navContainer.classList.remove('py-4'); navContainer.classList.add('py-2'); }
                 if(logoText) { logoText.classList.remove('text-white'); logoText.classList.add('text-brand-dark'); }
-                
                 navLinks.forEach(link => { link.classList.remove('text-white'); link.classList.add('text-gray-800'); });
                 navIcons.forEach(icon => { icon.classList.remove('text-white'); icon.classList.add('text-gray-800'); });
                 
@@ -498,14 +473,11 @@
                 if(searchIcon) { searchIcon.classList.remove('text-white'); searchIcon.classList.add('text-gray-600'); }
 
             } else {
-                // Transparent State
+                // Apply Transparent State (Only reached if isHomePage === true and NOT scrolled/hovered)
                 header.classList.add('bg-transparent', 'border-transparent');
                 header.classList.remove('bg-white', 'shadow-md', 'border-b', 'border-gray-200');
                 
-                if(topBar) { topBar.style.maxHeight = '50px'; topBar.style.opacity = '1'; topBar.style.padding = '0.5rem 0'; }
-                if(navContainer) { navContainer.classList.add('py-4'); navContainer.classList.remove('py-2'); }
                 if(logoText) { logoText.classList.add('text-white'); logoText.classList.remove('text-brand-dark'); }
-                
                 navLinks.forEach(link => { link.classList.add('text-white'); link.classList.remove('text-gray-800'); });
                 navIcons.forEach(icon => { icon.classList.add('text-white'); icon.classList.remove('text-gray-800'); });
                 
@@ -514,40 +486,6 @@
                     searchInput.classList.remove('bg-gray-100', 'text-gray-800', 'placeholder-gray-500', 'border-gray-300');
                 }
                 if(searchIcon) { searchIcon.classList.add('text-white'); searchIcon.classList.remove('text-gray-600'); }
-            }
-        }
-         function toggleCartDrawer() {
-            const drawer = document.getElementById('cartDrawer');
-            const overlay = document.getElementById('cartDrawerOverlay');
-            
-            const isClosed = drawer.classList.contains('translate-x-full');
-            
-            if (isClosed) {
-                // Open Drawer
-                drawer.classList.remove('translate-x-full');
-                
-                // Show Overlay
-                overlay.classList.remove('hidden');
-                setTimeout(() => {
-                    overlay.classList.remove('opacity-0', 'pointer-events-none');
-                    overlay.classList.add('opacity-100', 'pointer-events-auto');
-                }, 10);
-                
-                // Prevent background scrolling
-                document.body.style.overflow = 'hidden';
-            } else {
-                // Close Drawer
-                drawer.classList.add('translate-x-full');
-                
-                // Hide Overlay
-                overlay.classList.remove('opacity-100', 'pointer-events-auto');
-                overlay.classList.add('opacity-0', 'pointer-events-none');
-                setTimeout(() => {
-                    overlay.classList.add('hidden');
-                }, 300);
-                
-                // Restore background scrolling
-                document.body.style.overflow = '';
             }
         }
 
@@ -608,6 +546,41 @@
 
         // Trigger scroll immediately on load
         document.addEventListener('DOMContentLoaded', () => { window.dispatchEvent(new Event('scroll')); });
+
+         function toggleCartDrawer() {
+            const drawer = document.getElementById('cartDrawer');
+            const overlay = document.getElementById('cartDrawerOverlay');
+            
+            const isClosed = drawer.classList.contains('translate-x-full');
+            
+            if (isClosed) {
+                // Open Drawer
+                drawer.classList.remove('translate-x-full');
+                
+                // Show Overlay
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0', 'pointer-events-none');
+                    overlay.classList.add('opacity-100', 'pointer-events-auto');
+                }, 10);
+                
+                // Prevent background scrolling
+                document.body.style.overflow = 'hidden';
+            } else {
+                // Close Drawer
+                drawer.classList.add('translate-x-full');
+                
+                // Hide Overlay
+                overlay.classList.remove('opacity-100', 'pointer-events-auto');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+                
+                // Restore background scrolling
+                document.body.style.overflow = '';
+            }
+        }
     </script>
 </body>
 </html>
