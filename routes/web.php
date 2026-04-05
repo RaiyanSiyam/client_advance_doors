@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductManageController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CustomerAuthController;
 
 // ==========================================
 // 1. PUBLIC SHOP ROUTES
@@ -35,6 +37,19 @@ Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remov
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 
+// 1. Customer Authentication Routes
+Route::post('/customer/login', [CustomerAuthController::class, 'login'])->name('customer.login');
+Route::post('/customer/register', [CustomerAuthController::class, 'register'])->name('customer.register');
+Route::post('/customer/logout', [CustomerAuthController::class, 'logout'])->name('customer.logout');
+
+// 2. Profile Dashboard Routes (Protected by Auth Middleware)
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::post('/profile/addresses', [ProfileController::class, 'storeAddress'])->name('profile.address.store');
+    Route::delete('/profile/addresses/{address}', [ProfileController::class, 'destroyAddress'])->name('profile.address.destroy');
+});
 
 // ==========================================
 // 2. ADMIN PORTAL ROUTES
@@ -65,3 +80,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
         
     });
 });
+
+Route::get('/search-suggestions', function (\Illuminate\Http\Request $request) {
+    if (!$request->filled('q')) return response()->json([]);
+    
+    // Grabs active products where name matches the search query (Limit to 5 to keep the dropdown clean)
+    $products = \App\Models\Product::where('is_active', 1)
+        ->where('name', 'like', '%' . $request->q . '%')
+        ->select('id', 'name', 'slug', 'image', 'price', 'sale_price')
+        ->take(5)
+        ->get();
+        
+    return response()->json($products);
+});
+

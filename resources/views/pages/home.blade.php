@@ -76,10 +76,10 @@
 <div class="container mx-auto px-4 lg:px-8 py-20">
     <div class="flex flex-col lg:flex-row gap-8">
         <!-- Text Column -->
-        <div class="w-full lg:w-1/3 sm:w-1/2 flex flex-col justify-center lg:pr-12 text-left mb-10 lg:mb-0">
+        <div class="w-full lg:w-1/3 flex flex-col justify-center lg:pr-12 text-left mb-10 lg:mb-0">
             <h2 class="text-5xl font-bold text-brand-dark mb-6 leading-tight">Creations with<br>purpose</h2>
             <p class="text-2xl text-gray-500 font-light mb-8">Many choices based on your space</p>
-            <a href="{{ route('shop') }}" class="inline-block text-xl text-brand-dark font-medium border-b border-brand-dark pb-1 w-max hover:text-brand-red hover:border-brand-red transition">Explore Now</a>
+            <a href="{{ route('category.show', 'wooden-glass-doors') }}" class="inline-block text-xl text-brand-dark font-medium border-b border-brand-dark pb-1 w-max hover:text-brand-red hover:border-brand-red transition">Explore Now</a>
         </div>
 
         <!-- Image Grid Column (Changed from grid-cols-2 to grid-cols-3) -->
@@ -114,7 +114,7 @@
         <div class="absolute inset-0 bg-black/40"></div>
         <div class="absolute inset-0 flex flex-col justify-center p-12 md:p-20 text-white">
             <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-6">Designed to enhance<br>your personification</h2>
-            <a href="{{ route('shop') }}" class="inline-block text-lg font-medium border-b border-white pb-1 w-max hover:text-gray-200 transition">Explore Now</a>
+            <a href="{{ route('category.show', 'bed') }}" class="inline-block text-lg font-medium border-b border-white pb-1 w-max hover:text-gray-200 transition">Explore Now</a>
         </div>
     </div>
     
@@ -124,7 +124,7 @@
         <div class="absolute inset-0 bg-gray-500/30 mix-blend-multiply"></div>
         <div class="absolute inset-0 flex flex-col justify-center items-end text-right p-12 md:p-20 text-white">
             <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-6">Innovative enough to<br>stylize according to<br>convenience</h2>
-            <a href="{{ route('shop') }}" class="inline-block text-lg font-medium border-b border-white pb-1 w-max hover:text-gray-200 transition">Explore Now</a>
+            <a href="{{ route('category.show', 'sofa-set') }}" class="inline-block text-lg font-medium border-b border-white pb-1 w-max hover:text-gray-200 transition">Explore Now</a>
         </div>
     </div>
 </div>

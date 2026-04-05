@@ -8,48 +8,35 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    // Removed HasApiTokens from here
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
+        'phone', // <-- Added phone
         'password',
-        'role',
+        'role', 
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
 
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-    }
-    
-    // THIS IS THE METHOD CAUSING THE ERROR IF IT IS MISSING
-    public function isAdmin(): bool
+    public function isAdmin()
     {
         return $this->role === 'admin';
+    }
+
+    // Relationship: A user can have multiple addresses
+    public function addresses()
+    {
+        return $this->hasMany(UserAddress::class);
     }
 }
