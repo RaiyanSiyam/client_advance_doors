@@ -3,10 +3,35 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    // 1. Handles the main /product page and the Search Bar
+    public function index(Request $request)
+    {
+        $query = Product::with('category')->where('is_active', 1);
+
+        // If the user typed something in the search bar, filter the products!
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Get the products and remember the search query for pagination links
+        $products = $query->paginate(12)->appends($request->all());
+        
+        // Since the shop page was deleted, we will reuse your beautiful pages.category view!
+        // We create a "virtual" category object so the view's header text works perfectly without crashing.
+        $category = new Category();
+        $category->name = $request->filled('search') ? 'Search Results' : 'All Products';
+        $category->description = $request->filled('search') ? 'Showing matches for: "' . $request->search . '"' : 'Browse our complete catalog.';
+        $category->slug = 'all'; // Fallback slug to prevent routing errors
+
+        return view('pages.category', compact('products', 'category'));
+    }
+
+    // 2. Handles single product viewing (Untouched)
     public function show($slug)
     {
         // 1. Fetch the product by slug. 

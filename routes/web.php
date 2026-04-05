@@ -81,6 +81,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
+Route::get('/product', [App\Http\Controllers\ProductController::class, 'index'])->name('product.index');
+Route::get('/product/{slug}', [App\Http\Controllers\ProductController::class, 'show'])->name('product.show');
+
 Route::get('/search-suggestions', function (\Illuminate\Http\Request $request) {
     if (!$request->filled('q')) return response()->json([]);
     
@@ -93,4 +96,6 @@ Route::get('/search-suggestions', function (\Illuminate\Http\Request $request) {
         
     return response()->json($products);
 });
+
+
 
